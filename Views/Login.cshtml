@@ -1,0 +1,22 @@
+﻿@*@using Umbraco.Cms.Web.Common.PublishedModels;*@
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels
+@using Umbraco.Extensions
+@*@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage*@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.Login>
+@{
+	  Layout = "master.cshtml";
+}
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="col-md-9">
+            <article>
+                @await Umbraco.RenderMacroAsync("login")
+
+            </article>
+        </div>
+    </div>
+
+</section>

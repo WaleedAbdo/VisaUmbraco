@@ -1,0 +1,266 @@
+﻿@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using Umbraco.Extensions
+@using Umbraco.Cms.Core.Routing
+@using Umbraco.Cms.Web.Common
+@using System.Web
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.Blogpost>
+@inject UmbracoHelper Umbraco
+@inject IPublishedUrlProvider PublishedUrlProvider
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    Layout = "master.cshtml";
+
+    var MainPage = UmbracoContext.Content.GetAtRoot().DescendantsOrSelf<MainCategory>().FirstOrDefault();
+    var AllCategoryList = MainPage?.Children<Blogpost>().Where(x => x.IsVisible()) ?? Enumerable.Empty<Blogpost>();
+    //var CategoryPage = UmbracoContext.Content.GetAtRoot().DescendantsOrSelf<MainCategory>().FirstOrDefault();
+    var allBlogList = Model?.Children<SubArticle>().Where(x => x.IsVisible()) ?? Enumerable.Empty<SubArticle>();
+    IList<IPublishedContent> CategorywiseSubBlogArticlesPostings = Model.Children.Where(x => x.ContentType.Alias == "subArticle").ToList();
+    IList<IPublishedContent> AllBlogArticlesPostings = Model.AncestorOrSelf(1).DescendantsOrSelf().Where(x => x.ContentType.Alias == "mainCategory").FirstOrDefault().Descendants().Where(x => x.ContentType.Alias == "subArticle").ToList();
+    IPublishedContent SinglePostings = Model.AncestorOrSelf(1).DescendantsOrSelf().Where(x => x.ContentType.Alias == "mainCategory").FirstOrDefault();
+
+    var numberOfPosts = 2;
+    var httpContext = HttpContextAccessor.HttpContext;
+
+    var pageCount = (int)Math.Ceiling((double)AllBlogArticlesPostings.Count / (double)numberOfPosts);
+    //gets the page from the querystring and sets it to one if it is out of range
+    var page = 1;
+    int postCounter = 0;
+    if (httpContext != null && !string.IsNullOrEmpty(httpContext.Request.Query["page"]))
+    {
+        int.TryParse(httpContext.Request.Query["page"], out page);
+        if (page <= 0 || page > pageCount)
+        {
+            page = 1;
+        }
+    }
+    var pagedBlogposts = AllBlogArticlesPostings.Skip((page - 1) * numberOfPosts).Take(numberOfPosts).ToList();
+
+    string headerImage = "";
+    var BannerImageMediaPicker =Model.Value<IPublishedContent>("imageBlogspost");
+    if (BannerImageMediaPicker != null)
+    {
+        headerImage = BannerImageMediaPicker.Url();
+    }
+
+       string BlogsHeaderTitle = "";
+    if (Model.HasValue("BlogsHeaderTitle"))
+    { BlogsHeaderTitle = Model.Value<string>("BlogsHeaderTitle"); }
+    
+    <link rel="stylesheet" href="~/css/blogs_two.min.css">
+    <section id="hero-area" class="parallax-searchs header-blogs" data-stellar-background-ratio="0.5" style="background: url(@headerImage) !important;">
+        <div class="hero-main">
+            <div class="container aos-init aos-animate" data-aos="zoom-in">
+                <div class="row box-header">
+                    <div class="col-12">
+                        <div class="hero-inner">
+                            <!-- Welcome Text -->
+                            <div class="welcome-text">
+                                @Html.Raw(BlogsHeaderTitle)
+                            </div>
+                            <!--/ End Welcome Text -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="blogs-filter">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-8 col-sm-8 col-8">
+                    <div class="search">
+                        <input type="text" class="form-control" placeholder="search for blogs">
+                        <i class="fab fa-sistrix"></i>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-4"><button class="btn-search"><span>Search</span></button></div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="slider-buttons">
+                <div class="partners rec-pro text-center">
+                    <div class="sec-title">
+                        <h2>@Model.Name</h2>
+                    </div>
+             
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="how-it-works rec-pro section_one bg-white-2">
+            <div class="container">
+             
+                <div class="row service-1">
+                    @foreach (var item in CategorywiseSubBlogArticlesPostings)
+                {
+                    postCounter = postCounter + 1;
+                    string articleName = item.Name;
+                    //if (item.HasValue("titleHeaderBlog"))
+                    //{ articleName = item.Value<string>("titleHeaderBlog"); }
+
+                    string articleDescription = "";
+                    if (item.HasValue("describtion"))
+                    { articleDescription = item.Value<string>("describtion"); }
+
+                    if (articleDescription != null && articleDescription.Length > 75)
+                    {
+                        articleDescription = articleDescription.Substring(0, 75);
+                        articleDescription += "...";
+                        articleDescription = HttpUtility.HtmlDecode(articleDescription);
+                    }
+
+                    string ThumbnailImage = "";
+                    var BannerImageMediaPickerSingle = item.Value<IPublishedContent>("imageSize1");
+                    if (BannerImageMediaPickerSingle != null)
+                    {
+                        ThumbnailImage = BannerImageMediaPickerSingle.Url();
+                    }
+
+                    if (postCounter > 4)
+                    {
+                        @Html.Raw("</div>")
+                        @Html.Raw("<br/>")
+                        @Html.Raw("<div class=\"row service-1\">")
+                        postCounter = 0;
+                    }
+
+                    <article class="col-lg-3 col-md-6 col-xs-12 serv">
+                        <div class="serv-flex">
+                            <a href="@item.Url()">
+                                <div class="art-1 img-13">
+                                    <img src="@ThumbnailImage" alt="@articleName" class="img-responsive">
+                                    <h3>@articleName</h3>
+                                    @Html.Raw(articleDescription)
+                                </div>
+                            </a>
+                        </div>
+                    </article>
+                }
+
+            </div>
+
+        </div>
+    </section>
+
+
+
+    //@if (pagedBlogposts.Count > 0)
+    //{
+    //<section class="how-it-works rec-pro section_three bg-white-2">
+    //        <div class="container">
+    //                @{
+    //                int j = 0;
+    //                int counter = 0;
+    //                }
+    //            @foreach (var articlitem in pagedBlogposts)
+    //        {
+
+    //                string articleName = "";
+    //                if (articlitem.HasValue("titleHeaderBlog"))
+    //                { articleName = articlitem.Value<string>("titleHeaderBlog"); }
+
+    //                string articleDescription = "";
+    //                if (articlitem.HasValue("describtion"))
+    //                { articleDescription = articlitem.Value<string>("describtion"); }
+
+    //               if (articleDescription !=null && articleDescription.Length > 225)
+    //                {
+    //                    articleDescription = articleDescription.Substring(0, 225);
+    //                    articleDescription += "...";
+    //                    articleDescription = HttpUtility.HtmlDecode(articleDescription);
+    //                }
+
+    //                string ThumbnailImage = "";
+    //                var BannerImageMediaPickerSingle = articlitem.Value<IPublishedContent>("imageSize1");
+    //                if (BannerImageMediaPickerSingle != null)
+    //                {
+    //                    ThumbnailImage = BannerImageMediaPickerSingle.Url();
+    //                }
+
+    //                string CreatedDate = articlitem.CreateDate.ToString("dddd,mmmm dd,yyyy");
+    //                counter = counter + 1;
+
+            //            j = j + 1;
+
+    //            if (j % 2 == 0)
+    //            {
+    //                    <div class="row row-right">
+    //                        <div class="col-lg-7 col-md-10 col-sm-12 col-12 left-side-box">
+    //                            <div class="order-number">@counter</div>
+    //                            <img src="@ThumbnailImage" alt="@articleName" class="img-responsive">
+    //                            <div>
+    //                                <h3>
+    //                                  @articleName
+    //                                </h3>
+    //                              @Html.Raw(articleDescription)
+    //                                <p>Posted by VisaTitansTeam on @CreatedDate</p>
+    //                                <p class="blog_article_timeline_readmore"> <a class="text-danger" href="@articlitem.Url()">Read More <i class="fas fa-angle-double-right"></i> </a></p>
+    //                            </div>
+    //                        </div>
+    //                    </div>
+    //            }
+    //            else
+    //            {
+    //                    <div class="row row-left">
+    //                        <div class="col-lg-7 col-md-10 col-sm-12 col-12 right-side-box">
+    //                            <div class="order-number">@counter</div>
+    //                            <img src="@ThumbnailImage" alt="@articleName" class="img-responsive">
+    //                            <div>
+    //                                <h3>
+    //                                  @articleName
+    //                                </h3>
+    //                             @Html.Raw(articleDescription)
+    //                               <p>Posted by VisaTitansTeam on @CreatedDate</p>
+    //                                <p class="blog_article_timeline_readmore"> <a class="text-danger" href="@articlitem.Url()">Read More <i class="fas fa-angle-double-left"></i> </a></p>
+    //                            </div>
+
+    //                        </div>
+    //                    </div>
+    //            }
+
+    //        }
+
+    //        </div>
+
+
+    //           @if (AllBlogArticlesPostings.Count > numberOfPosts)
+    //            {
+    //                <ul class="page">
+    //                 @if (page <= 1)
+    //            {
+    //                    <li class="page__btn nav-link--disabled"><span class="material-icons"><i class="fas fa-angle-left"></i></span></li>
+    //            } else
+    //            {
+    //                    <li class="page__btn nav-link--disabled"><span class="material-icons"><a class="nav-link nav-link--black" href="@(Model.Url() + "?page=" + (page - 1))"><i class="fas fa-angle-left"></i></a></span></li>
+    //            }
+    //                @for (int i = 1; i <= pageCount; i++)
+    //            {
+    //                     <li class="page__numbers @(page == i ? " active" : null)"><a href="@(Model.Url()+ "?page=" + i)">@i</a></li>
+    //            }
+
+    //                @if (page == pageCount)
+    //            {
+    //                    <li class="page__btn nav-link--disabled"><span class="material-icons"><i class="fas fa-angle-right"></i></span></li>
+    //            }
+    //            else
+    //            {
+    //                    <li class="page__btn"><span class="material-icons"><a class="nav-link nav-link--black" href="@(Model.Url() + "?page=" + (page + 1))"><i class="fas fa-angle-right"></i></a></span></li>
+    //            }
+
+    //      </ul>
+
+    //      }
+
+    //</section>
+    //}
+
+
+
+}
+
+

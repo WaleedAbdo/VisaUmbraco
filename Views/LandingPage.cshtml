@@ -1,0 +1,1404 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.LandingPage>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using MyCustomUmbracoProject.Custom;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    Layout = "master.cshtml";
+    var NationalID = HttpContextAccessor.HttpContext.Request.Query["nid"];
+    var LivingIN = HttpContextAccessor.HttpContext.Request.Query["lvI"];
+    var CityID = HttpContextAccessor.HttpContext.Request.Query["citid"];
+    var DestinationID = HttpContextAccessor.HttpContext.Request.Query["destid"];
+    var TravelingID = HttpContextAccessor.HttpContext.Request.Query["trvlid"];
+
+    var SelectionFAQS = Model.Value<IEnumerable<IPublishedElement>>("addFAQustions");
+
+    string FaqText = "";
+    if (Model.HasValue("fAQText"))
+    { FaqText = Model.Value<string>("fAQText"); }
+
+    string VideoURL = "";
+    if (Model.HasValue("videoUrl"))
+    { VideoURL = Model.Value<string>("videoUrl"); }
+
+    string VideoDescribtion = "";
+    if (Model.HasValue("videoDescribtion"))
+    { VideoDescribtion = Model.Value<string>("videoDescribtion"); }
+
+
+    string BottomSectionTitle = "";
+    if (Model.HasValue("bottomSectionTitle"))
+    { BottomSectionTitle = Model.Value<string>("bottomSectionTitle"); }
+    string BottomSectionDescription = "";
+    if (Model.HasValue("bottomSectionDescription"))
+    { BottomSectionDescription = Model.Value<string>("bottomSectionDescription"); }
+
+    string HeaderImageTitle = "";
+    if (Model.HasValue("headerImageTitle"))
+    { HeaderImageTitle = Model.Value<string>("headerImageTitle"); }
+
+    string HeaderImageDescription = "";
+    if (Model.HasValue("headerImageDescription"))
+    { HeaderImageDescription = Model.Value<string>("headerImageDescription"); }
+
+    string HeaderImageURL = "";
+    var HeaderTypeMediapicker = Model.Value<IPublishedContent>("headerImage");
+    if (HeaderTypeMediapicker != null)
+    { HeaderImageURL = HeaderTypeMediapicker.Url(); }
+    //headerImageTitle   headerImageDescription headerImage headerImageAlt
+    string HeaderImageAlt = "";
+    if (Model.HasValue("headerImageAlt"))
+    { HeaderImageAlt = Model.Value<string>("headerImageAlt"); }
+
+       string TextLine1 = "";
+    if (Model.HasValue("titleText1"))
+    { TextLine1 = Model.Value<string>("titleText1"); }
+
+      string TextLine2 = "";
+    if (Model.HasValue("titleText2"))
+    { TextLine2 = Model.Value<string>("titleText2"); }
+
+  
+
+}
+<link rel="stylesheet" href="~/css/china.min.css">
+
+<section id="hero-area" class="parallax-searchs header-home header-china" data-stellar-background-ratio="0.5" style="background:url(@HeaderImageURL) !important;">
+    <div class="hero-main">
+        <div class="container">
+            <div class="row box-header">
+                <div class="col-12">
+                    <div class="hero-china">
+                   
+                        <!-- Welcome Text -->
+                        <div class="welcome-text">
+                            <h1 class="h1 d-none d-sm-block">@HeaderImageTitle</h1>
+                            <h4 class="title-desc">
+                                @Html.Raw(HeaderImageDescription.Replace("<p>","").Replace("</p>",""))
+                            </h4>
+                        </div>
+                        <!--/ End Welcome Text -->
+                        <div class="row">
+                            <!-- Start Web -->
+                            <div class="col-12 row-taps tab-web" id="visa_search_tabs">
+                                <div class="banner-search-wrap">
+                                    <ul class="nav nav-tabs rld-banner-tab">
+                                        <li class="nav-item tab-header1">
+                                            <a class="nav-link active tab-home" data-toggle="tab" href="#tabs_1" id="button_tab_1">Visa</a>
+                                        </li>
+                                        <li class="nav-item tab-header2">
+                                            <a class="nav-link tab-home" data-toggle="tab" href="#tabs_2" id="button_tab_2">Legalization</a>
+                                        </li>
+
+                                        <li class="nav-item tab-header3">
+                                            <a class="nav-link tab-home" data-toggle="tab" href="#tabs_3" id="button_tab_3">Saudi Work Visa</a>
+                                        </li>
+
+                                        <li class="nav-item tab-header4">
+                                            <a class="nav-link tab-home" data-toggle="tab" href="#tabs_4" id="button_tab_4">Saudi Invitaion Letter</a>
+                                        </li>
+
+                                        <li class="nav-item tab-header5">
+                                            <a class="nav-link tab-home" data-toggle="tab" href="#tabs_5" id="button_tab_5">Translation</a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <!-- Start -->
+                                        <div class="tab-pane fade show active" id="tabs_1">
+                                            <div class="rld-main-search">
+                                                <div class="row">
+                                                    <div class="rld-single-select mb-3 col-lg-2">
+                                                        <div class="ui action input">
+                                                            <label class="label-home">
+                                                                <i class="fas fa-map-marker-alt mr-2"></i>
+                                                                Nationality
+                                                            </label>
+                                                            <select id="VisaNationality" class="ui ui_nationality compact selection dropdown fa-select">
+                                                            </select>
+                                                            <div id="Nationalityerrormessage" class="invalid-feedback" style="display:none;"> Please choose a nationality.</div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="rld-single-select mb-3 col-lg-2">
+                                                        <label class="label-home">
+                                                            <i class="mr-2 fas fa-map-marker-alt"></i> Living In
+                                                        </label>
+                                                        <select id="VisaLivingIn" autocomplete="on" class="ui compact selection dropdown">
+                                                        </select>
+                                                        <div id="Visalivingerrormessage" class="invalid-feedback" style="display:none;"> Please choose where are you living in.</div>
+                                                    </div>
+
+                                                    <div class="rld-single-select mb-3 col-lg-2">
+                                                        <label class="label-home"><i class="mr-2 fas fa-map-marker-alt"></i> Residence City</label>
+                                                        <select id="VisaResidenceCity" class="ui compact selection dropdown">
+                                                        </select>
+                                                        <div id="residentialcityerrormessage" class="invalid-feedback" style="display:none;"> Please choose a residence city.</div>
+                                                    </div>
+
+                                                    <div class="rld-single-select mb-3 col-lg-2">
+                                                        <label class="label-home"><i class="mr-2 fas fa-map-marker-alt"></i> Traveling To </label>
+                                                        <select id="VisaTravelingTo" class="ui ui_travelto compact selection dropdown">
+                                                        </select>
+                                                        <div id="traveltoerrormessage" class="invalid-feedback" style="display:none;"> Please choose where are you travel to.</div>
+
+                                                    </div>
+
+                                                    <div class="rld-single-select mb-3 col-lg-2">
+                                                        <label class="label-home"><i class="fas fa-tasks mr-2"></i> Purpose Of Travel</label>
+                                                        <select id="VisaPurposeOfTravel" class="ui compact selection dropdown">
+                                                        </select>
+                                                        <div id="travelpurposeerrormessage" class="invalid-feedback" style="display:none;"> Please choose the purpose of travel.</div>
+                                                    </div>
+
+                                                    <div class="col-lg-2">
+                                                        <button id="chkVisaRequirments" class="btn btn-check mt-4" href="javascript:;"> Check Requirements</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End -->
+                                                     <!-- Start -->
+                                                <div class="tab-pane fade" id="tabs_2">
+                                                    <div class="rld-main-search">
+                                                        <div class="row">
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="fas fa-user mr-2"></i> Name</label>
+                                                                <input id="legalname" type="text" placeholder="Name" class="form-control input-lg border-radius-15">
+                                                                <div id="legalnameerrormessage" class="invalid-feedback" style="display:none;"> Please provide your name.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="fas fa-envelope mr-2"></i> Email</label>
+                                                                <input id="legalemail" type="text" placeholder="Email" class="form-control input-lg border-radius-15">
+                                                                <div id="legalemailerrormessage" class="invalid-feedback" style="display:none;"> Please provide email.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="fas fa-mobile mr-2"></i> Mobile</label>
+                                                                <input id="legalmobile" type="text" placeholder="Mobile" class="form-control input-lg border-radius-15">
+                                                                <div id="legalmobileerrormessage" class="invalid-feedback" style="display:none;"> Please provide mobile.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="mr-2 fas fa-map-marker-alt"></i> Dcoument From</label>
+                                                                <select id="legaldocumentfrom" class="ui compact selection dropdown">
+                                                                    <option>select</option>
+                                                                    <option value="china">  China</option>
+                                                                    <option value="brazil">  Brazil</option>
+                                                                    <option value="country">  Country</option>
+                                                                    <option value="uae"> UAE</option>
+                                                                    <option value="usa"> USA</option>
+                                                                    <option value="egypt">  Egypt</option>
+                                                                    <option value="maldives">  MALDIVES</option>
+                                                                </select>
+                                                                <div id="legaldocumentfromerrormessage" class="invalid-feedback" style="display:none;"> Please choose the document from field.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="mr-2 fas fa-map-marker-alt"></i> Used In</label>
+                                                                <select id="legalUsedIn" class="ui compact selection dropdown">
+                                                                    <option>select</option>
+                                                                    <option value="china">  China</option>
+                                                                    <option value="brazil">  Brazil</option>
+                                                                    <option value="country">  Country</option>
+                                                                    <option value="uae"> UAE</option>
+                                                                    <option value="usa"> USA</option>
+                                                                    <option value="egypt">  Egypt</option>
+                                                                    <option value="maldives">  MALDIVES</option>
+                                                                </select>
+                                                                <div id="legalUsedInerrormessage" class="invalid-feedback" style="display:none;"> Please choose the Used In field.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="fas fa-upload mr-2"></i> Upload Document</label>
+                                                                <input id="legaldocument" type="file" placeholder="Upload Document" class="form-control input-lg border-radius-15" multiple>
+                                                                <i class="fa fa-file-o file-tap" aria-hidden="true"></i>
+                                                                <div id="legaldocumenterrormessage" class="invalid-feedback" style="display:none;"> Please provide the document.</div>
+                                                            </div>
+
+                                                            <div class="col-lg-2 col-tap2">
+                                                                <button id="legalbtnfrom" class="btn btn-check mt-4" type="button">Get Quote</button>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- End-->
+                                                <!-- Start -->
+                                                <div class="tab-pane fade" id="tabs_3">
+                                                    <div class="rld-main-search">
+                                                        <div class="row">
+
+
+                                                            <div class="rld-single-select mb-3 col-lg-3">
+                                                                <label class="label-home"><i class="mr-2 fas fa-map-marker-alt"></i> Nationality</label>
+                                                                <select id="SaudiVisaNationality" class="ui ui_nationality compact selection dropdown">
+                                                                </select>
+                                                                 <div id="SaudiVisaNationalityerrormessage" class="invalid-feedback" style="display:none;"> Please choose a nationality.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-3">
+                                                                <label class="label-home"><i class="mr-2 fas fa-map-marker-alt"></i> Living In</label>
+                                                                <select id="SaudiVisaLivingIn" class="ui compact selection dropdown">
+                                                                </select>
+                                                                <div id="SaudiVisaLivingInerrormessage" class="invalid-feedback" style="display:none;"> Please choose a Living In.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-3">
+                                                                <label class="label-home"><i class="fas fa-globe mr-2"></i> Qualification degree from</label>
+                                                                <select id="SaudiVisadegreefrom" class="select single-select">
+                                                                    <option> Please Select*</option>
+                                                                    <option value="china">  Riyadh</option>
+                                                                    <option value="brazil">  Jeddah</option>
+                                                                    <option value="country">  Dhahran</option>
+                                                                    <option value="uae"> Jubail </option>
+                                                                </select>
+                                                                <div id="SaudiVisadegreefromerrormessage" class="invalid-feedback" style="display:none;"> Please choose a Degree.</div>
+                                                            </div>
+
+                                                            <div class="col-lg-3">
+                                                                <button id="saudiavisabtnfrm" class="btn btn-check mt-4"> Check Requirements</button>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- End-->
+                                                <!-- Start -->
+                                                <div class="tab-pane fade" id="tabs_4">
+                                                    <div class="rld-main-search">
+                                                        <div class="row">
+
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="fas fa-user mr-2"></i> Name</label>
+                                                                <input id="saudiinvitationname" type="text" placeholder="Name" class="form-control input-lg border-radius-15">
+                                                                <div id="saudiinvitationnameerrormessage" class="invalid-feedback" style="display:none;"> Please provide name.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="fas fa-envelope mr-2"></i> Email</label>
+                                                                <input id="saudiinvitationemail" type="text" placeholder="Email" class="form-control input-lg border-radius-15">
+                                                                <div id="saudiinvitationemailerrormessage" class="invalid-feedback" style="display:none;"> Please provide email.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="fas fa-mobile mr-2"></i> Mobile</label>
+                                                                <input id="saudiinvitationemobile" type="text" placeholder="Mobile" class="form-control input-lg border-radius-15">
+                                                                <div id="saudiinvitationemobileerrormessage" class="invalid-feedback" style="display:none;"> Please provide email.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="mr-2 fas fa-map-marker-alt"></i> Nationality</label>
+                                                                <select id="saudiinvitationenationality" class="ui  ui_nationality compact selection dropdown">
+                                                                </select>
+                                                                <div id="saudiinvitationenationalityerrormessage" class="invalid-feedback" style="display:none;"> Please choos Nationality.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="mr-2 fas fa-map-marker-alt"></i> Living in</label>
+                                                                <select id="saudiinvitationeLivingIn" class="ui compact selection dropdown">
+                                                                </select>
+                                                                <div id="saudiinvitationeLivingInerrormessage" class="invalid-feedback" style="display:none;"> Please choos Nationality.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="fas fa-envelope mr-2"></i> Letter validity</label>
+                                                                <select id="saudiinvitationelettervalidity" class="ui compact selection dropdown">
+                                                                    <option> Please Select</option>
+                                                                    <option> 3 Months</option>
+                                                                    <option>  6 Months</option>
+                                                                    <option> 12Months</option>
+                                                                    <option>  24 Months</option>
+                                                                </select>
+                                                                <div id="saudiinvitationelettervalidityerrormessage" class="invalid-feedback" style="display:none;"> Please choos Nationality.</div>
+                                                            </div>
+
+                                                            <div class="col-lg-2 col-tap2">
+                                                                <button id="saudiinvitationbtnfrm" class="btn btn-check mt-4" type="button">Get Invitation</button>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- End-->
+                                                <!-- Start -->
+                                                <div class="tab-pane fade" id="tabs_5">
+                                                    <div class="rld-main-search">
+                                                        <div class="row">
+
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="fas fa-user mr-2"></i> Name</label>
+                                                                <input id="translationname" type="text" placeholder="Name" class="form-control input-lg border-radius-15">
+                                                                <div id="translationnameerrormessage" class="invalid-feedback" style="display:none;"> Please choos upload document.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="fas fa-envelope mr-2"></i>  Email</label>
+                                                                <input id="translationemail" type="text" placeholder="Email" class="form-control input-lg border-radius-15">
+                                                                <div id="translationemailerrormessage" class="invalid-feedback" style="display:none;"> Please choos upload document.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="fas fa-mobile mr-2"></i> Mobile</label>
+                                                                <input id="translationmobile" type="text" placeholder="Mobile" class="form-control input-lg border-radius-15">
+                                                                <div id="translationmobileerrormessage" class="invalid-feedback" style="display:none;"> Please choos upload document.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="fas fa-upload mr-2"></i> Upload Document</label>
+                                                                <input id="translationuploaddocument" type="file" placeholder="Upload Document" class="form-control input-lg border-radius-15" multiple>
+                                                                <i class="fa fa-file-o file-tap" aria-hidden="true"></i>
+                                                                  <div id="translationuploaddocumenterrormessage" class="invalid-feedback" style="display:none;"> Please choos upload document.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="fas fa-language  d-none mr-2"></i> Document Language</label>
+                                                                <select id="translationdoclanguage" class="ui compact selection dropdown">
+                                                                    <option> Language</option>
+                                                                </select>
+                                                                  <div id="translationdoclanguageerrormessage" class="invalid-feedback" style="display:none;"> Please choos Document Language.</div>
+                                                            </div>
+
+                                                            <div class="rld-single-select mb-3 col-lg-2 col-tap2">
+                                                                <label class="label-home"><i class="fas fa-language  d-none mr-2"></i> Translation Language</label>
+                                                                <selectt id="translationtranslanguage" class="ui compact selection dropdown">
+                                                                    <option> Language</option>
+                                                                </selectt>
+                                                                 <div id="translationtranslanguageerrormessage" class="invalid-feedback" style="display:none;"> Please choos Translation Language.</div>
+                                                            </div>
+
+                                                            <div class="col-lg-2 col-tap2">
+                                                                <button id="translationbtnfrm" class="btn btn-check mt-4" type="button">Translate</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- End-->
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Web -->
+                            <!-- Start Mobile -->
+                            <div class="col-12 row-taps tab-mobile">
+                                <div class="banner-search-wrap">
+                                    <ul class="nav nav-tabs rld-banner-tab">
+                                        <li class="nav-item">
+                                            <a class="nav-link active">Visa</a>
+                                        </li>
+
+                                        <div class="tab-content">
+                                            <!-- Start -->
+                                            <div class="tab-pane fade show active" id="tabs_1">
+                                                <div class="rld-main-search">
+                                                  <form method="get" action="">
+                                                                <div class="row">
+                                                                    <div class="rld-single-select mb-3 col-lg-2">
+                                                                        <label class="label-home"><i class="mr-2 fas fa-map-marker-alt"></i> Nationality </label>
+                                                                        <select id="Visanationalitymobile" class="ui compact selection dropdown">
+                                                                        </select>
+                                                                        <div id="Nationalityerrormessage" class="invalid-feedback" style="display:none;"> Please choose a nationality.</div>
+                                                                    </div>
+
+                                                                    <div class="rld-single-select mb-3 col-lg-2">
+                                                                        <label class="label-home"><i class="mr-2 fas fa-map-marker-alt"></i> Living In</label>
+                                                                        <select id="VisaLivingINmobile" class="ui compact selection dropdown">
+                                                                        </select>
+                                                                        <div id="Visalivingerrormessagemobile" class="invalid-feedback" style="display:none;"> Please choose where are you living in.</div>
+                                                                    </div>
+
+                                                                    <div class="rld-single-select mb-3 col-lg-2">
+                                                                        <label class="label-home"><i class="mr-2 fas fa-map-marker-alt"></i> Residence City</label>
+                                                                        <select id="VisaResidenceCitymobile" class="ui compact selection dropdown">
+                                                                        </select>
+                                                                        <div id="residentialcityerrormessagemobile" class="invalid-feedback" style="display:none;"> Please choose a residence city.</div>
+                                                                    </div>
+
+                                                                    <div class="rld-single-select mb-3 col-lg-2">
+                                                                        <label class="label-home"><i class="mr-2 fas fa-map-marker-alt"></i> Traveling To</label>
+                                                                        <select id="VisaTravelingTomobile" class="ui ui_travelto compact selection dropdown">
+                                                                        </select>
+                                                                        <div id="traveltoerrormessagemobile" class="invalid-feedback" style="display:none;"> Please choose where are you travel to.</div>
+                                                                    </div>
+
+                                                                    <div class="rld-single-select mb-3 col-lg-2">
+                                                                        <label class="label-home">Purpose Of Travel</label>
+                                                                        <select id="VisaPurposeOfTravelmobile" class="ui compact selection dropdown">
+                                                                        </select>
+                                                                         <div id="travelpurposeerrormessagemobile" class="invalid-feedback" style="display:none;"> Please choose the purpose of travel.</div>
+                                                                    </div>
+
+                                                                    <div class="col-lg-2">
+                                                                        <a id="chkVisarequirmentmobile" class="btn btn-check mt-4" rel="javascript:;" href="javascript:;"> Check Requirements</a>
+                                                                    </div>
+
+                                                                </div>
+                                                            </form>
+                                                </div>
+                                            </div>
+                                            <!-- End -->
+                                        </div>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="modal" data-target="#tap2">Legalization</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="modal" data-target="#tap3">Saudi Work Visa</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="modal" data-target="#tap4">Saudi Invitaion Letter</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link last-link" data-toggle="modal" data-target="#tap5">Translation</a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- End Mobile -->
+                        </div>
+                    
+                      <div id="titlerequrmenttext" style="display:none;"></div>
+               
+                    </div>
+                
+                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="apidynamichtml">
+</div>
+
+<!-- ==================================== -->
+<!-- Start Row 4-->
+<section class="bg-light  pb-5">
+    <div class="container">
+        <div class="row services-youtube text-center">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-12">
+
+                        @if (!string.IsNullOrEmpty(VideoURL))
+                        {
+                            string FinalVideoURL = "https://www.youtube.com/embed/" + VideoURL + "?autoplay=1&mute=1";
+                            <iframe width="555" height="394" src="@FinalVideoURL"></iframe>
+                        }
+
+                        @if (!string.IsNullOrEmpty(VideoDescribtion))
+                        {
+                            <p class="text-left p-youtube p-youtube-china">
+                                @Html.Raw(VideoDescribtion.Replace("<p>","").Replace("</p>",""))
+                            </p>
+                        }
+                    </div>
+                    @if (!string.IsNullOrEmpty(FaqText))
+                    {
+                        <div class="col-12 my-4"><h2>@FaqText</h2></div>
+                    }
+
+                    @foreach (var faqitem in SelectionFAQS)
+                    {
+                        string QuestionHeading = "";
+                        if (faqitem.HasValue("featureDetails"))
+                        { QuestionHeading = faqitem.Value<string>("featureDetails"); }
+
+                        string AnswerHeading = "";
+                        if (faqitem.HasValue("featureName"))
+                        { AnswerHeading = faqitem.Value<string>("featureName"); }
+
+                        @if (!string.IsNullOrEmpty(QuestionHeading) && !string.IsNullOrEmpty(AnswerHeading))
+                        {
+                            <div class="col-lg-6">
+                                <div class="box text-left">
+                                    <h3>@QuestionHeading</h3>
+                                    @Html.Raw(AnswerHeading)
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    @if (!string.IsNullOrEmpty(BottomSectionTitle) || !string.IsNullOrEmpty(BottomSectionDescription))
+                    {
+                        <div class="col-12 mt-5">
+                            @if (!string.IsNullOrEmpty(BottomSectionTitle))
+                            {
+                                <h2>@BottomSectionTitle</h2>
+                            }
+                            @if (!string.IsNullOrEmpty(BottomSectionDescription))
+                            {
+                                <p class="text-left p-youtube p-youtube-china text-dark">
+                                    @Html.Raw(BottomSectionDescription.Replace("<p>","").Replace("</p>",""))
+                                </p>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Row 4 -->
+<!-- ==================================== -->
+
+<script src="~/js/jquery-3.5.1.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="~/js/layout.min.js"></script>
+<script src="~/js/china.min.js"></script>
+
+
+<script>
+
+    $(document).ready(function() {
+        
+        var langId = 1;
+        GetNationalityByLanguageID(langId);
+
+        $(document).on('change', '#VisaLivingIn,#VisaLivingINmobile', function() {
+            var RegionId = $(this).val();
+            if (RegionId != null && RegionId != "undefined") { GetCitiesByRegionID(langId, RegionId); }
+        });
+
+           if (('@LivingIN' != null && '@LivingIN'!="" && '@LivingIN'!="undefined") && ('@CityID' != null && '@CityID'!="" && '@CityID'!="undefined")&&('@DestinationID' != null && '@DestinationID'!="" && '@DestinationID'!="undefined")&&('@NationalID' != null && '@NationalID'!="" && '@NationalID'!="undefined") &&('@TravelingID' != null && '@TravelingID'!="" && '@TravelingID'!="undefined")) {
+            
+            CheckVisaRequirments(langId, '@LivingIN', '@CityID', '@DestinationID', '@NationalID', '@TravelingID');
+        }
+
+
+        $(document).on('click', '#chkVisaRequirments,#chkVisarequirmentmobile', function() {
+
+            if (checkIsMobile() || window.matchMedia("(max-width: 767px)").matches) {
+
+                if (MobileDropdownValidation()) {
+
+
+                var RegionalID = $("#VisaLivingINmobile option:selected").val();
+                var NationalityID = $("#Visanationalitymobile option:selected").val();//$("#VisaLivingINmobile option:selected").attr("rel");
+                var CityID = $("#VisaResidenceCitymobile option:selected").val();
+                var DestinationID = $("#VisaTravelingTomobile option:selected").val();
+                var TravelingOfPurposID = $("#VisaPurposeOfTravelmobile option:selected").val();
+               
+                 if ($("#chkVisarequirmentmobile").attr("rel") != null && $("#chkVisarequirmentmobile").attr("rel") != "" && typeof ($("#chkVisarequirmentmobile").attr("rel")) !== "undefined" && $("#chkVisarequirmentmobile").attr("rel") !== "javascript:;") {
+                      var FinalURL=$("#chkVisarequirmentmobile").attr("rel") + "?nid=" + NationalityID + "&lvI=" + RegionalID + "&citid=" + CityID + "&destid=" + DestinationID + "&trvlid=" + TravelingOfPurposID;
+                      window.location.href= FinalURL;
+
+                    }
+                else {
+
+                CheckVisaRequirments(langId, RegionalID, CityID, DestinationID, NationalityID, TravelingOfPurposID);
+                
+                }
+
+                }
+
+            } else { 
+            
+            if (DropdownValidation()) {
+                
+                 var RegionalID = $("#VisaLivingIn option:selected").val();
+                var NationalityID = $("#VisaNationality option:selected").val(); //$("#VisaLivingIn option:selected").attr("rel");
+                var CityID = $("#VisaResidenceCity option:selected").val();
+                var DestinationID = $("#VisaTravelingTo option:selected").val();
+                var TravelingOfPurposID = $("#VisaPurposeOfTravel option:selected").val();
+               
+                if ($("#chkVisaRequirments").attr("href") != null && $("#chkVisaRequirments").attr("href")!="" && typeof ($("#chkVisaRequirments").attr("href")) !== "undefined" && $("#chkVisaRequirments").attr("href") !== "javascript:;") {
+                    location.href = $("#chkVisaRequirments").attr("href")+"?nid="+NationalityID+"&lvI="+RegionalID+"&citid="+CityID+"&destid="+DestinationID+"&trvlid="+TravelingOfPurposID;
+                }
+                else {
+
+                CheckVisaRequirments(langId, RegionalID, CityID, DestinationID, NationalityID, TravelingOfPurposID);
+                
+                }
+               
+
+            }
+            }
+
+        });
+
+           var VisaType = "";
+        $(document).on('click', '.p_one', function() {
+            if ($(this).hasClass("active")) {
+                VisaType=$(this).attr("rel");
+                
+                //localStorage.setItem('VisaTypes', VisaType);
+                }
+            });
+
+          //p_three active
+        var ValidatityVal = "";
+        $(document).on('click', '.p_three', function() {
+            if ($(this).hasClass("active")) {
+                if ($(".p_four").hasClass("active")) {$(".p_four").removeClass("active") }
+                ValidatityVal = $(this).attr("rel");
+            }
+        });
+
+        $(document).on('click', '.p_four', function() {
+
+            if ($(this).hasClass("active")) {
+                var ProcessingID = $(this).attr("rel");
+                var DurationstayVal=$("#duration").attr("rel");
+                if (ValidatityVal != null && ValidatityVal != "" && typeof (ValidatityVal) != "undefined" && ProcessingID != null && ProcessingID != "" && typeof (ProcessingID) != "undefined") {
+
+                    if (('@LivingIN' != null && '@LivingIN' != "" && '@LivingIN' != "undefined") && ('@CityID' != null && '@CityID' != "" && '@CityID' != "undefined") && ('@DestinationID' != null && '@DestinationID' != "" && '@DestinationID' != "undefined") && ('@NationalID' != null && '@NationalID' != "" && '@NationalID' != "undefined") && ('@TravelingID' != null && '@TravelingID' != "" && '@TravelingID' != "undefined")) {
+
+                    var ReqVisaparamData = {plangId: langId, pRegionId: '@LivingIN', pCityId: '@CityID', pDestinationid: '@DestinationID', pNationalityId: '@NationalID', pTravelpurposeId:  '@TravelingID', pValidatityVal: ValidatityVal, pProcessingID: ProcessingID,pDurationstay:DurationstayVal }
+                    var urls = "/Umbraco/Surface/VisaAPI/GetFeesByValidityandProcessingID";
+
+                    jQuery.ajax({
+                        type: 'GET',
+                        url: urls,
+                        data: ReqVisaparamData,
+                        dataType: 'JSON',
+                        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                        success: function(Result) {
+                        
+                            if (Result != null) 
+                            {
+                                if (Result.embassyFees != null) { $("#embassyfee").html(Result.embassyFees); }
+                                else {  $("#embassyfee").html("NA");}
+
+                                if (Result.serviceFees != null) { $("#servicefee").html(Result.serviceFees); }
+                                else {  $("#servicefee").html("NA");}
+
+                                  if (Result.vatFees != null) { $("#vatfee").html(Result.vatFees); }
+                                else {  $("#vatfee").html("NA");}
+
+                                 if (Result.totalFees != null) { $("#totalfee").html(Result.totalFees); }
+                                else {  $("#totalfee").html("NA");}
+
+                              $("#applyvisa").css("display","block");
+
+                             
+                            }
+                         
+
+                        },
+                        error: function() {
+                            alert("Error occurs");
+                        }
+                    });
+
+
+                    }
+
+                }
+
+            }
+        });
+
+        $(document).on('change', '.ui_travelto', function() {
+            var $value = $(this).find(":selected").text();
+          
+            if ($value == null || typeof ($value) == "undefined" || $value == "select") {
+                //$("#ctryerrormessage").css('display', 'block');
+                return false;
+            }
+
+            var paramData = { pNationalityName: $value }
+            var urls = "/Umbraco/Surface/VisaAPI/GetCountryNodeByName";
+
+            jQuery.ajax({
+                type: 'GET',
+                url: urls,
+                data: paramData,
+                dataType: 'JSON',
+                contentType: 'application/json',
+
+                success: function(Result) {
+                    $("#chkVisaRequirments").attr("href", "javascript:;");
+                    $("#chkVisarequirmentmobile").attr("rel", "javascript:;");
+                    if (Result.nodeURL != null && typeof (Result.nodeURL) != "undefined" && Result.nodeURL != "javascript:;") {
+                        $("#chkVisaRequirments").attr("href", Result.nodeURL);
+                       $("#chkVisarequirmentmobile").attr("rel", Result.nodeURL);
+                        //chkVisarequirmentmobile
+                    }
+                   
+                    
+                },
+                error: function() {
+                    alert("Error occurs");
+                }
+            });
+
+
+
+
+        });
+
+         //applyvisa
+         $(document).on('click', '#applyvisa', function() {
+
+             localStorage.clear();
+             if ($(".p_one").hasClass("active")) {localStorage.setItem('VisaTypes', $(".p_one").attr("rel")); }
+             if ($("#totalfee").text()!=null && $("#totalfee").text()!="") {localStorage.setItem('TotalFee', $("#totalfee").text()); }
+             if (langId != null && langId != "" && langId != "undefined") { localStorage.setItem('langId', langId); }
+             if ('@NationalID' != null && '@NationalID' != "" && '@NationalID' != "undefined") { localStorage.setItem('NationalID', '@NationalID');localStorage.setItem('NationalName',  $("#VisaNationality option:selected").text()); }
+             if ('@LivingIN' != null && '@LivingIN' != "" && '@LivingIN' != "undefined") { localStorage.setItem('LivingIN', '@LivingIN');localStorage.setItem('LivingINName', $("#VisaLivingIn option:selected").text()); }
+             if ('@CityID' != null && '@CityID' != "" && '@CityID' != "undefined") { localStorage.setItem('CityID', '@CityID'); localStorage.setItem('CityName', $("#VisaResidenceCity option:selected").text()); }
+             if ('@DestinationID' != null && '@DestinationID' != "" && '@DestinationID' != "undefined") { localStorage.setItem('DestinationID', '@DestinationID'); localStorage.setItem('DestinationName', $("#VisaTravelingTo option:selected").text()); }
+             if ('@TravelingID' != null && '@TravelingID' != "" && '@TravelingID' != "undefined") { localStorage.setItem('TravelingID', '@TravelingID'); localStorage.setItem('TravelingName', $("#VisaPurposeOfTravel option:selected").text()); }
+
+              window.location.href = "/visa-app";
+             //alert(localStorage.getItem('langId') + " "+localStorage.getItem('NationalID') + " "+ localStorage.getItem('LivingIN') + " "+ localStorage.getItem('CityID') + " "+ localStorage.getItem('DestinationID') + " "+ localStorage.getItem('TravelingID'));
+});
+
+                //SENDING EMAIL
+        //LEGALIZATION
+        $(document).on('click', '#legalbtnfrom', function() {
+       
+            $("#legalnameerrormessage").css('display', 'none');
+            $("#legalemailerrormessage").css('display', 'none');
+            $("#legalmobileerrormessage").css('display', 'none');
+            $("#legaldocumentfromerrormessage").css('display', 'none');
+            $("#legalUsedInerrormessage").css('display', 'none');
+            $("#legaldocumenterrormessage").css('display', 'none');
+
+            if ($("#legalname").val() == null || typeof ($("#legalname").val()) == "undefined" || $("#legalname").val() == "") {
+                $("#legalnameerrormessage").css('display', 'block');
+                return false;
+            }
+
+            if ($("#legalemail").val() == null || typeof ($("#legalemail").val()) == "undefined" || $("#legalemail").val() == "") {
+                $("#legalemailerrormessage").css('display', 'block');
+                return false;
+            }
+            if (!validateEmail($("#legalemail").val())) {
+                $("#legalemailerrormessage").css('display', 'block');
+                return false;
+            }
+
+            if ($("#legalmobile").val() == null || typeof ($("#legalmobile").val()) == "undefined" || $("#legalmobile").val() == "") {
+                $("#legalmobileerrormessage").css('display', 'block');
+                return false;
+            }
+
+
+            if ($("#legaldocumentfrom option:selected").val() == null || typeof ($("#legaldocumentfrom option:selected").val()) == "undefined" || $("#legaldocumentfrom option:selected").text() == "select") {
+                $("#legaldocumentfromerrormessage").css('display', 'block');
+                return false;
+            }
+
+            if ($("#legalUsedIn option:selected").val() == null || typeof ($("#legalUsedIn option:selected").val()) == "undefined" || $("#legalUsedIn option:selected").text() == "select") {
+                $("#legalUsedInerrormessage").css('display', 'block');
+                return false;
+            }
+
+            var formData = new FormData();
+            //var fileUpload = "";
+            //if ($("#legaldocument").length > 0) {
+            //    var fileUpload = $("#legaldocument").get(0);
+            //    var files = fileUpload.files;
+            //    formData.append("PdfFile", files[0]);
+            //    fileUpload = files[0];
+            //}
+
+               var files = $("#legaldocument").get(0).files;
+
+              for (var i = 0; i < files.length; i++) {
+                formData.append("PdfFile", files[i]);
+            }
+
+
+            var Name = $("#legalname").val();
+            var Email = $("#legalemail").val();
+            var Mobile = $("#legalmobile").val();
+            var DocumentFrom = $("#legaldocumentfrom option:selected").text();
+            var UsedIn = $("#legalUsedIn option:selected").text();
+
+            formData.append("Name", Name);
+            formData.append("Email", Email);
+            formData.append("Mobile", Mobile);
+            formData.append("DocumentFrom", DocumentFrom);
+            formData.append("UsedIn", UsedIn);
+
+
+     var urls = "/Umbraco/api/EmailSending/LegalizationSendEmail";
+
+     jQuery.ajax({
+		type: 'POST',
+		url: urls,
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false,
+	
+		success: function (repo) {
+        
+			if (repo == "success") {
+				
+                         $("#legalname").val("");
+                        $("#legalemail").val("");
+                        $("#legalmobile").val("");
+                        $("#legaldocument").val("");
+
+                       
+			}
+		},
+		error: function() {
+			alert("Error occurs");
+		}
+	});
+
+
+
+        });
+
+        //SaudiWORK VISA
+        $(document).on('click', '#saudiavisabtnfrm', function() {
+
+       $("#SaudiVisaNationalityerrormessage").css('display', 'none');
+        $("#SaudiVisaLivingInerrormessage").css('display', 'none');
+        $("#SaudiVisadegreefromerrormessage").css('display', 'none');
+
+        if ($("#SaudiVisaNationality option:selected").val() == null || typeof ($("#SaudiVisaNationality option:selected").val()) == "undefined" || $("#SaudiVisaNationality option:selected").text() == "select") {
+            $("#SaudiVisaNationalityerrormessage").css('display', 'block');
+            return false;
+        }
+           if ($("#SaudiVisaLivingIn option:selected").val() == null || typeof ($("#SaudiVisaLivingIn option:selected").val()) == "undefined" || $("#SaudiVisaLivingIn option:selected").text() == "select") {
+            $("#SaudiVisaLivingInerrormessage").css('display', 'block');
+            return false;
+        }
+             if ($("#SaudiVisadegreefrom option:selected").val() == null || typeof ($("#SaudiVisadegreefrom option:selected").val()) == "undefined" || $("#SaudiVisadegreefrom option:selected").text() == "select") {
+            $("#SaudiVisadegreefromerrormessage").css('display', 'block');
+            return false;
+        }
+
+            var Nationality =$("#SaudiVisaNationality option:selected").text();
+            var LivingIn = $("#SaudiVisaLivingIn option:selected").text();
+            var DegreeFrom = $("#SaudiVisadegreefrom option:selected").text();
+         var requestData = { pNationality: Nationality,pLivingIn:LivingIn,pDegreeFrom:DegreeFrom }
+        var urls = "/Umbraco/Surface/VisaAPI/SaudiWorkVisaSendEmail";
+
+        jQuery.ajax({
+            type: 'GET',
+            url: urls,
+            data: requestData,
+            dataType: 'JSON',
+            contentType: 'application/json',
+
+            success: function(repo) {
+
+                if (repo != null && repo=="1") {  alert("Email send successfully!");}
+               
+            },
+            error: function() {
+                alert("Error occurs");
+            }
+        });
+
+
+    });
+
+       //SaudiINVITATION LETTER
+       $(document).on('click', '#saudiinvitationbtnfrm', function() {
+
+       $("#saudiinvitationnameerrormessage").css('display', 'none');
+        $("#saudiinvitationemailerrormessage").css('display', 'none');
+        $("#saudiinvitationemobileerrormessage").css('display', 'none');
+        $("#saudiinvitationenationalityerrormessage").css('display', 'none');
+        $("#saudiinvitationeLivingInerrormessage").css('display', 'none');
+        $("#saudiinvitationelettervalidityerrormessage").css('display', 'none');
+
+             if ($("#saudiinvitationname").val() == null || typeof ($("#saudiinvitationname").val()) == "undefined" || $("#saudiinvitationname").val() == "") {
+                $("#saudiinvitationnameerrormessage").css('display', 'block');
+                return false;
+            }
+
+            if ($("#saudiinvitationemail").val() == null || typeof ($("#saudiinvitationemail").val()) == "undefined" || $("#saudiinvitationemail").val() == "") {
+                $("#saudiinvitationemailerrormessage").css('display', 'block');
+                return false;
+            }
+            if (!validateEmail($("#saudiinvitationemail").val())) {
+                $("#saudiinvitationemailerrormessage").css('display', 'block');
+                return false;
+            }
+
+              if ($("#saudiinvitationemobile").val() == null || typeof ($("#saudiinvitationemobile").val()) == "undefined" || $("#saudiinvitationemobile").val() == "") {
+                $("#saudiinvitationemobileerrormessage").css('display', 'block');
+                return false;
+            }
+
+
+                if ($("#saudiinvitationenationality option:selected").val() == null || typeof ($("#saudiinvitationenationality option:selected").val()) == "undefined" || $("#saudiinvitationenationality option:selected").text() == "select") {
+            $("#saudiinvitationenationalityerrormessage").css('display', 'block');
+            return false;
+        }
+           if ($("#saudiinvitationeLivingIn option:selected").val() == null || typeof ($("#saudiinvitationeLivingIn option:selected").val()) == "undefined" || $("#saudiinvitationeLivingIn option:selected").text() == "select") {
+            $("#saudiinvitationeLivingInerrormessage").css('display', 'block');
+            return false;
+        }
+             if ($("#saudiinvitationelettervalidity option:selected").val() == null || typeof ($("#saudiinvitationelettervalidity option:selected").val()) == "undefined" || $("#saudiinvitationelettervalidity option:selected").text() == "select") {
+            $("#saudiinvitationelettervalidityerrormessage").css('display', 'block');
+            return false;
+        }
+
+
+           var Name = $("#saudiinvitationname").val();
+           var Email = $("#saudiinvitationemail").val();
+           var Mobile = $("#saudiinvitationemobile").val();
+            var Nationality =$("#saudiinvitationenationality option:selected").text();
+            var LivingIn = $("#saudiinvitationeLivingIn option:selected").text();
+            var Lettervalidity = $("#saudiinvitationelettervalidity option:selected").text();
+
+
+             var requestData = { pName: Name,pEmail:Email,pMobile:Mobile,pNationality:Nationality,pLivingIn:LivingIn,pLettervalidity:Lettervalidity }
+        var urls = "/Umbraco/Surface/VisaAPI/SaudiInvitationLatterSendEmail";
+
+        jQuery.ajax({
+            type: 'GET',
+            url: urls,
+            data: requestData,
+            dataType: 'JSON',
+            contentType: 'application/json',
+
+            success: function(repo) {
+
+                if (repo != null && repo=="1") {  alert("Email send successfully!");
+                
+               $("#saudiinvitationname").val("");
+               $("#saudiinvitationemail").val("");
+               $("#saudiinvitationemobile").val("");
+                $("#saudiinvitationenationality").text("");
+                $("#saudiinvitationeLivingIn").text("");
+                $("#saudiinvitationelettervalidity").text("");
+                
+                }
+               
+            },
+            error: function() {
+                alert("Error occurs");
+            }
+        });
+
+
+
+
+
+
+
+     });
+     
+ //TRANSLATION 
+  $(document).on('click', '#translationbtnfrm', function() {
+
+             $("#translationnameerrormessage").css('display', 'none');
+        $("#translationemailerrormessage").css('display', 'none');
+        $("#translationmobileerrormessage").css('display', 'none');
+        $("#translationuploaddocument").css('display', 'none');
+
+        if ($("#translationname").val() == null || typeof ($("#translationname").val()) == "undefined" || $("#translationname").val() == "") {
+                $("#translationnameerrormessage").css('display', 'block');
+                return false;
+            }
+
+              if ($("#translationemail").val() == null || typeof ($("#translationemail").val()) == "undefined" || $("#translationemail").val() == "") {
+                $("#translationemailerrormessage").css('display', 'block');
+                return false;
+            }
+              if ($("#translationmobile").val() == null || typeof ($("#translationmobile").val()) == "undefined" || $("#translationmobile").val() == "") {
+                $("#translationmobileerrormessage").css('display', 'block');
+                return false;
+            }
+
+                if ($("#translationuploaddocument").val() == null || typeof ($("#translationuploaddocument").val()) == "undefined" || $("#translationuploaddocument").val() == "") {
+                $("#translationuploaddocumenterrormessage").css('display', 'block');
+                return false;
+            }
+
+            var Name=$("#translationname").val();
+            var Email=$("#translationemail").val();
+            var Mobile = $("#translationmobile").val();
+            var Documentlanguage=$("#translationdoclanguage").val();
+            var Translationlanguage=$("#translationtranslanguage").val();
+
+            var formData = new FormData();
+            //var fileUpload = "";
+            //if ($("#translationuploaddocument").length > 0) {
+            //    var fileUpload = $("#translationuploaddocument").get(0);
+            //    var files = fileUpload.files;
+            //    formData.append("PdfFile", files[0]);
+            //    fileUpload = files[0];
+            //}
+
+             var files = $("#translationuploaddocument").get(0).files;
+
+              for (var i = 0; i < files.length; i++) {
+                formData.append("PdfFile", files[i]);
+            }
+
+            formData.append("Name", Name);
+            formData.append("Email", Email);
+            formData.append("Mobile", Mobile);
+            formData.append("Documentlanguage", Documentlanguage);
+            formData.append("Translationlanguage", Translationlanguage);
+
+     var urls = "/Umbraco/api/EmailSending/TranslationSendEmail";
+
+     jQuery.ajax({
+		type: 'POST',
+		url: urls,
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false,
+	
+		success: function (repo) {
+        
+			if (repo == "success") {
+				
+                         $("#translationname").val("");
+                        $("#translationemail").val("");
+                        $("#translationmobile").val("");
+                        $("#translationuploaddocument").val("");
+                        //$("#translationdoclanguage").val("");
+                        // $("#translationtranslanguage").val("");
+
+                         
+			}
+		},
+		error: function() {
+			alert("Error occurs");
+		}
+	});
+
+
+
+
+
+ });
+
+    });
+
+ function checkIsMobile(){
+      if(navigator.userAgent.indexOf("Mobile") > 0){
+        return true;
+      }else{
+        return false;
+      }
+   }
+
+function MobileDropdownValidation() {
+
+        $("#Nationalityerrormessagemobile").css('display', 'none');
+        $("#Visalivingerrormessagemobile").css('display', 'none');
+        $("#residentialcityerrormessagemobile").css('display', 'none');
+        $("#traveltoerrormessagemobile").css('display', 'none');
+        $("#travelpurposeerrormessagemobile").css('display', 'none');
+
+          if ($("#Visanationalitymobile option:selected").val() == null || typeof ($("#Visanationalitymobile option:selected").val()) == "undefined" || $("#Visanationalitymobile option:selected").text() == "select") {
+            $("#Nationalityerrormessagemobile").css('display', 'block');
+            return false;
+        }
+
+        if ($("#VisaLivingINmobile option:selected").val() == null || typeof ($("#VisaLivingINmobile option:selected").val()) == "undefined" || $("#VisaLivingINmobile option:selected").text() == "select") {
+            $("#Visalivingerrormessagemobile").css('display', 'block');
+            return false;
+        }
+
+
+        if ($("#VisaResidenceCitymobile option:selected").val() == null || typeof ($("#VisaResidenceCitymobile option:selected").val()) == "undefined" || $("#VisaResidenceCitymobile option:selected").text() == "select") {
+            $("#residentialcityerrormessagemobile").css('display', 'block');
+            return false;
+        }
+
+        if ($("#VisaTravelingTomobile option:selected").val() == null || typeof ($("#VisaTravelingTomobile option:selected").val()) == "undefined" || $("#VisaTravelingTomobile option:selected").text() == "select") {
+            $("#traveltoerrormessagemobile").css('display', 'block');
+            return false;
+        }
+
+        if ($("#VisaPurposeOfTravelmobile option:selected").val() == null || typeof ($("#VisaPurposeOfTravelmobile option:selected").val()) == "undefined" || $("#VisaPurposeOfTravelmobile option:selected").text() == "select") {
+            $("#travelpurposeerrormessagemobile").css('display', 'block');
+            return false;
+        }
+
+        return true;
+
+}
+
+    function DropdownValidation() {
+
+        $("#Nationalityerrormessage").css('display', 'none');
+        $("#Visalivingerrormessage").css('display', 'none');
+        $("#residentialcityerrormessage").css('display', 'none');
+        $("#traveltoerrormessage").css('display', 'none');
+        $("#travelpurposeerrormessage").css('display', 'none');
+
+        if ($("#VisaNationality option:selected").val() == null || typeof ($("#VisaNationality option:selected").val()) == "undefined" || $("#VisaNationality option:selected").text() == "select") {
+            $("#Nationalityerrormessage").css('display', 'block');
+            return false;
+        }
+
+        if ($("#VisaLivingIn option:selected").val() == null || typeof ($("#VisaLivingIn option:selected").val()) == "undefined" || $("#VisaLivingIn option:selected").text() == "select") {
+            $("#Visalivingerrormessage").css('display', 'block');
+            return false;
+        }
+
+
+        if ($("#VisaResidenceCity option:selected").val() == null || typeof ($("#VisaResidenceCity option:selected").val()) == "undefined" || $("#VisaResidenceCity option:selected").text() == "select") {
+            $("#residentialcityerrormessage").css('display', 'block');
+            return false;
+        }
+
+        if ($("#VisaTravelingTo option:selected").val() == null || typeof ($("#VisaTravelingTo option:selected").val()) == "undefined" || $("#VisaTravelingTo option:selected").text() == "select") {
+            $("#traveltoerrormessage").css('display', 'block');
+            return false;
+        }
+
+        if ($("#VisaPurposeOfTravel option:selected").val() == null || typeof ($("#VisaPurposeOfTravel option:selected").val()) == "undefined" || $("#VisaPurposeOfTravel option:selected").text() == "select") {
+            $("#travelpurposeerrormessage").css('display', 'block');
+            return false;
+        }
+
+        return true;
+
+    }
+
+    function GetCitiesByRegionID(langId, RegionId) {
+
+        var cityparamData = { plangId: langId, pRegionId: RegionId }
+        var urls = "/Umbraco/Surface/VisaAPI/GETAllCitiesByRegionID";
+
+        jQuery.ajax({
+            type: 'GET',
+            url: urls,
+            data: cityparamData,
+            cache: false,
+            dataType: 'JSON',
+            contentType: 'application/json',
+
+            success: function(repo) {
+
+                if (repo.result.cities != null && repo.result.cities.length > 0) {
+
+                    $("#VisaResidenceCity").html('');
+                    $("#VisaResidenceCity").append("<option>select</option>");
+                    //Mobile
+                     $("#VisaResidenceCitymobile").html('');
+                    $("#VisaResidenceCitymobile").append("<option>select</option>");
+                    $.each(repo.result.cities, function(indexes, item) {
+
+                        var newListItem = "<option value=\"" + repo.result.cities[indexes].cityId + "\">" + repo.result.cities[indexes].name + "</option>";
+                        $("#VisaResidenceCity").append(newListItem);
+                        //Mobile
+                          $("#VisaResidenceCitymobile").append(newListItem);
+
+                        if ('@CityID' != null && '@CityID' != "" && '@CityID' != "undefined" && '@CityID'==repo.result.cities[indexes].cityId) { 
+                            $("#VisaResidenceCity option:selected").val(repo.result.cities[indexes].cityId);
+                             $("#VisaResidenceCity option:selected").text(repo.result.cities[indexes].name);
+
+                             //MOBILE
+                               $("#VisaResidenceCitymobile option:selected").val(repo.result.cities[indexes].cityId);
+                                 $("#VisaResidenceCitymobile option:selected").text(repo.result.cities[indexes].name);
+                           
+                        }
+
+                    });
+                } else { 
+                   $("#VisaResidenceCity").html('');
+                    $("#VisaResidenceCity").append("<option>NA</option>");
+                    //Mobile
+                    $("#VisaResidenceCitymobile").html('');
+                    $("#VisaResidenceCitymobile").append("<option>NA</option>");
+                }
+
+            },
+            error: function() {
+                alert("Error occurs");
+            }
+        });
+    }
+
+    function CheckVisaRequirments(langId, RegionId, CityId, Destinationid, NationalityId, TravelpurposeId) {
+
+        var ReqVisaparamData = { plangId: langId, pRegionId: RegionId, pCityId: CityId, pDestinationid: Destinationid, pNationalityId: NationalityId, pTravelpurposeId: TravelpurposeId }
+        var urls = "/Umbraco/Surface/VisaAPI/GetVisaRequirments";
+
+        jQuery.ajax({
+            type: 'GET',
+            url: urls,
+            data: ReqVisaparamData,
+            dataType: 'JSON',
+            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+            success: function(data) {
+
+                if (data != null && data.stringObjectValues != null && data.stringObjectValues != "") {
+
+                    $("#apidynamichtml").html(data.stringObjectValues);
+                }
+                if (data != null && data.titleheading != null && data.titleheading != "") {
+                    $("#titlerequrmenttext").css('display', 'block');
+                    $("#titlerequrmenttext").append(data.titleheading);
+                }
+
+                //RUN TIME BINDING ONLY FOR LANDING PAGE
+                $("#title1").append('@TextLine1');
+                 $("#title2").append('@TextLine2');
+
+            },
+            error: function() {
+                alert("Error occurs");
+            }
+        });
+
+    }
+
+  function GetNationalityByLanguageID(langId) {
+
+        var requestData = { plangId: langId }
+        var urls = "/Umbraco/Surface/VisaAPI/GetAllCountriesByLangID";
+
+        jQuery.ajax({
+            type: 'GET',
+            url: urls,
+            data: requestData,
+            dataType: 'JSON',
+            contentType: 'application/json',
+
+            success: function(repo) {
+
+                if (repo.result.nationalities != null) {
+
+                    $("#VisaNationality").append("<option>select</option>");
+                    $("#SaudiVisaNationality").append("<option>select</option>");
+                    $("#VisaLivingIn").append("<option>select</option>");
+                    $("#SaudiVisaLivingIn").append("<option>select</option>");
+                    $("#saudiinvitationenationality").append("<option>select</option>");
+                    $("#saudiinvitationeLivingIn").append("<option>select</option>");
+
+                     $("#legaldocumentfrom").append("<option>select</option>");
+                      $("#legalUsedIn").append("<option>select</option>");
+                    //MOBILE
+                    $("#Visanationalitymobile").append("<option>select</option>");
+                    $("#VisaLivingINmobile").append("<option>select</option>");
+
+                    $.each(repo.result.origins, function(indexes, item) {
+
+                        var newListItem = "<option rel=\"" + repo.result.origins[indexes].nationalityId + "\" value=\"" + repo.result.origins[indexes].originId + "\">" + repo.result.origins[indexes].name + "</option>";
+                       var NationalityListItem = "<option value=\"" + repo.result.origins[indexes].nationalityId + "\">" + repo.result.origins[indexes].name + "</option>";
+                        $("#VisaNationality").append(NationalityListItem);
+                        $("#SaudiVisaNationality").append(NationalityListItem);
+                        $("#VisaLivingIn").append(newListItem);
+                        $("#SaudiVisaLivingIn").append(newListItem);
+                        $("#saudiinvitationenationality").append(NationalityListItem);
+                        $("#saudiinvitationeLivingIn").append(newListItem);
+                        $("#legaldocumentfrom").append(newListItem);
+                        $("#legalUsedIn").append(newListItem);
+                        //MOBILE
+                        $("#Visanationalitymobile").append(NationalityListItem);
+                        $("#VisaLivingINmobile").append(newListItem);
+
+                        if ('@NationalID' != null && '@NationalID' != "" && '@NationalID' != "undefined" && '@NationalID' == repo.result.origins[indexes].nationalityId) {
+                      
+                            $("#VisaNationality option:selected").val(repo.result.origins[indexes].nationalityId);
+                             $("#VisaNationality option:selected").text(repo.result.origins[indexes].name);
+
+                             $("#SaudiVisaNationality option:selected").val(repo.result.origins[indexes].nationalityId);
+                             $("#SaudiVisaNationality option:selected").text(repo.result.origins[indexes].name);
+
+                              $("#saudiinvitationenationality option:selected").val(repo.result.origins[indexes].nationalityId);
+                             $("#saudiinvitationenationality option:selected").text(repo.result.origins[indexes].name);
+
+                             //MOBILE
+                             $("#Visanationalitymobile option:selected").val(repo.result.origins[indexes].nationalityId);
+                             $("#Visanationalitymobile option:selected").text(repo.result.origins[indexes].name);
+
+                          
+                        }
+                           if ('@LivingIN' != null && '@LivingIN' != "" && '@LivingIN' != "undefined" && '@LivingIN' == repo.result.origins[indexes].originId) {
+                      
+                            $("#VisaLivingIn option:selected").val(repo.result.origins[indexes].originId);
+                            $("#VisaLivingIn option:selected").text(repo.result.origins[indexes].name);
+
+                              $("#SaudiVisaLivingIn option:selected").val(repo.result.origins[indexes].originId);
+                            $("#SaudiVisaLivingIn option:selected").text(repo.result.origins[indexes].name);
+
+                              $("#saudiinvitationeLivingIn option:selected").val(repo.result.origins[indexes].originId);
+                            $("#saudiinvitationeLivingIn option:selected").text(repo.result.origins[indexes].name);
+
+                            //MOBILE
+
+                             $("#VisaLivingINmobile option:selected").val(repo.result.origins[indexes].originId);
+                            $("#VisaLivingINmobile option:selected").text(repo.result.origins[indexes].name);
+
+                            GetCitiesByRegionID(langId, '@LivingIN');
+                        }
+
+
+
+
+                    });
+                }
+
+                if (repo.result.destinations != null) {
+                    $("#VisaTravelingTo").append("<option>select</option>");
+                    //MOBILE
+                    $("#VisaTravelingTomobile").append("<option>select</option>");
+                    $.each(repo.result.destinations, function(indexes, item) {
+                        var newListItem = "<option value=\"" + repo.result.destinations[indexes].destinationId + "\">" + repo.result.destinations[indexes].name + "</option>";
+                        $("#VisaTravelingTo").append(newListItem);
+                        //MOBILE
+                        $("#VisaTravelingTomobile").append(newListItem);
+
+                              if ('@DestinationID' != null && '@DestinationID' != "" && '@DestinationID' != "undefined" && '@DestinationID' == repo.result.destinations[indexes].destinationId) {
+                      
+                             $("#VisaTravelingTo option:selected").val(repo.result.destinations[indexes].destinationId);
+                             $("#VisaTravelingTo option:selected").text(repo.result.destinations[indexes].name);
+
+                             //MOBILE
+                               $("#VisaTravelingTomobile option:selected").val(repo.result.destinations[indexes].destinationId);
+                             $("#VisaTravelingTomobile option:selected").text(repo.result.destinations[indexes].name);
+                        }
+
+                    });
+                }
+
+                if (repo.result.travelPurposes != null) {
+                    $("#VisaPurposeOfTravel").append("<option>select</option>");
+                    //MOBILE
+                    $("#VisaPurposeOfTravelmobile").append("<option>select</option>");
+                    $.each(repo.result.travelPurposes, function(indexes, item) {
+                        var newListItem = "<option value=\"" + repo.result.travelPurposes[indexes].travelPurposeId + "\">" + repo.result.travelPurposes[indexes].name + "</option>";
+                        $("#VisaPurposeOfTravel").append(newListItem);
+                        //MOBILE
+                        $("#VisaPurposeOfTravelmobile").append(newListItem);
+
+
+                       if ('@TravelingID' != null && '@TravelingID' != "" && '@TravelingID' != "undefined" && '@TravelingID' == repo.result.travelPurposes[indexes].travelPurposeId) {
+                      
+                             $("#VisaPurposeOfTravel option:selected").val(repo.result.travelPurposes[indexes].travelPurposeId);
+                             $("#VisaPurposeOfTravel option:selected").text(repo.result.travelPurposes[indexes].name);
+
+                             //MOBILE
+
+                              $("#VisaPurposeOfTravelmobile option:selected").val(repo.result.travelPurposes[indexes].travelPurposeId);
+                             $("#VisaPurposeOfTravelmobile option:selected").text(repo.result.travelPurposes[indexes].name);
+                        }
+
+                    });
+                }
+
+
+            },
+            error: function() {
+                alert("Error occurs");
+            }
+        });
+
+
+    }
+</script>

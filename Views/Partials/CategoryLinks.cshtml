@@ -1,0 +1,13 @@
+﻿@inherits UmbracoViewPage
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels
+
+@{
+    var Blogpost = Model.AncestorOrSelf<ContentModels.Blogpost>();
+
+    @("BlogpostSimpledata: "+Blogpost.Category);
+//@foreach (var category in Blogpost.Category)
+//{
+//    @category
+//    <text> </text>
+//}
+}

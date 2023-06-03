@@ -1,0 +1,780 @@
+﻿@inherits UmbracoViewPage<MyCustomUmbracoProject.Models.UserVM>
+@using Umbraco.Cms.Web.Common.Models
+@using Umbraco.Cms.Web.Common.Security
+@using Umbraco.Cms.Web.Website.Controllers
+@using Umbraco.Cms.Core.Services
+@using Umbraco.Extensions
+@using MyCustomUmbracoProject.Custom
+@{
+    // isApplicantAMinor areYouInvitedByAFamilyOrAFriend
+    var NodeContent = Umbraco.Content(Model.UserID);// destinationCountry 
+    var FirstName = NodeContent != null && NodeContent.HasProperty("firstName") && NodeContent.HasValue("firstName") && NodeContent.Value<string>("firstName") != "" ? NodeContent.Value<string>("firstName") : string.Empty;
+    var MiddleName = NodeContent != null && NodeContent.HasProperty("middleName") && NodeContent.HasValue("middleName") && NodeContent.Value<string>("middleName") != "" ? NodeContent.Value<string>("middleName") : string.Empty;
+    var SurName = NodeContent != null && NodeContent.HasProperty("surname") && NodeContent.HasValue("surname") && NodeContent.Value<string>("surname") != "" ? NodeContent.Value<string>("surname") : string.Empty;
+    var OtherNames = NodeContent != null && NodeContent.HasProperty("otherNames") && NodeContent.HasValue("otherNames") && NodeContent.Value<string>("otherNames") != "" ? NodeContent.Value<string>("otherNames") : string.Empty;
+    var MobilePhoneNumber = NodeContent != null && NodeContent.HasProperty("mobilePhoneNumber") && NodeContent.HasValue("mobilePhoneNumber") && NodeContent.Value<string>("mobilePhoneNumber") != "" ? NodeContent.Value<string>("mobilePhoneNumber") : string.Empty;
+
+    var dateOfBirth = NodeContent != null && NodeContent.HasProperty("dateOfBirth") && NodeContent.HasValue("dateOfBirth") && NodeContent.Value<string>("dateOfBirth") != "" ? NodeContent.Value<string>("dateOfBirth") : string.Empty;
+    var placeOfBirth = NodeContent != null && NodeContent.HasProperty("placeOfBirth") && NodeContent.HasValue("placeOfBirth") && NodeContent.Value<string>("placeOfBirth") != "" ? NodeContent.Value<string>("placeOfBirth") : string.Empty;
+    var Gender = NodeContent != null && NodeContent.HasProperty("gender") && NodeContent.HasValue("gender") && NodeContent.Value<string>("gender") != "" ? NodeContent.Value<string>("gender") : string.Empty;
+    var CurrentNationality = NodeContent != null && NodeContent.HasProperty("currentNationality") && NodeContent.HasValue("currentNationality") && NodeContent.Value<string>("currentNationality") != "" ? NodeContent.Value<string>("currentNationality") : string.Empty;
+    var PreviousNationality = NodeContent != null && NodeContent.HasProperty("previousNationality") && NodeContent.HasValue("previousNationality") && NodeContent.Value<string>("previousNationality") != "" ? NodeContent.Value<string>("previousNationality") : string.Empty;
+    var MaritalStatus = NodeContent != null && NodeContent.HasProperty("maritalStatus") && NodeContent.HasValue("maritalStatus") && NodeContent.Value<string>("maritalStatus") != "" ? NodeContent.Value<string>("maritalStatus") : string.Empty;
+
+    var NationalIdentityNumber = NodeContent != null && NodeContent.HasProperty("nationalIdentityNumber") && NodeContent.HasValue("nationalIdentityNumber") && NodeContent.Value<string>("nationalIdentityNumber") != "" ? NodeContent.Value<string>("nationalIdentityNumber") : string.Empty;
+    var PassportNumber = NodeContent != null && NodeContent.HasProperty("passportNumber") && NodeContent.HasValue("passportNumber") && NodeContent.Value<string>("passportNumber") != "" ? NodeContent.Value<string>("passportNumber") : string.Empty;
+
+    var PassportDate = NodeContent != null && NodeContent.HasProperty("passportDate") && NodeContent.HasValue("passportDate") && NodeContent.Value<string>("passportDate") != "" ? NodeContent.Value<string>("passportDate") : string.Empty;
+    var PassportExpireDate = NodeContent != null && NodeContent.HasProperty("passportExpireDate") && NodeContent.HasValue("passportExpireDate") && NodeContent.Value<string>("passportExpireDate") != "" ? NodeContent.Value<string>("passportExpireDate") : string.Empty;
+
+    var FlatHouseNumber = NodeContent != null && NodeContent.HasProperty("flatHouseNumber") && NodeContent.HasValue("flatHouseNumber") && NodeContent.Value<string>("flatHouseNumber") != "" ? NodeContent.Value<string>("flatHouseNumber") : string.Empty;
+    var StreetNameNumber = NodeContent != null && NodeContent.HasProperty("streetNameNumber") && NodeContent.HasValue("streetNameNumber") && NodeContent.Value<string>("streetNameNumber") != "" ? NodeContent.Value<string>("streetNameNumber") : string.Empty;
+    var AreaName = NodeContent != null && NodeContent.HasProperty("areaName") && NodeContent.HasValue("areaName") && NodeContent.Value<string>("areaName") != "" ? NodeContent.Value<string>("areaName") : string.Empty;
+    var City = NodeContent != null && NodeContent.HasProperty("city") && NodeContent.HasValue("city") && NodeContent.Value<string>("city") != "" ? NodeContent.Value<string>("city") : string.Empty;
+    var ZipPostcode = NodeContent != null && NodeContent.HasProperty("zipPostcode") && NodeContent.HasValue("zipPostcode") && NodeContent.Value<string>("zipPostcode") != "" ? NodeContent.Value<string>("zipPostcode") : string.Empty;
+    var BuildingNameNumber = NodeContent != null && NodeContent.HasProperty("buildingNameNumber") && NodeContent.HasValue("buildingNameNumber") && NodeContent.Value<string>("buildingNameNumber") != "" ? NodeContent.Value<string>("buildingNameNumber") : string.Empty;
+
+    string LogoURL = Configuration.DomainUrl + "images/Embassy/Shengan_Visa.Png";
+    //
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous" />
+        <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+          integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+        <title>Austria</title>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row py-4"
+                 style="border-radius: 0px 0px 500px 500px; background: yellow">
+                <div class="col-12">
+                    <h2 class="mx-5 text-end">Formular C1</h2>
+                </div>
+                <div class="col-12 text-center">
+                    <img src="@LogoURL" height="80" alt="logo" />
+                </div>
+            </div>
+
+            <div class="row my-4">
+                <div class="col-12">
+                    <h3 class="text-center">
+                        Antrag auf Erteilung eines Schengen-Visums / طلب تاشيرة شينغن
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-2 py-3 text-center border border-1 border-dark">
+                    <p>
+                        Stempel der <br />
+                        Dienststelle
+                    </p>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-6">
+                    <p>Dieses Antragsformular ist unentgeltlich / هذه االستمارة مجانية</p>
+                </div>
+                <div class="col-2 py-3 text-center border border-1 border-dark">
+                    <p>PHOTO</p>
+                </div>
+            </div>
+
+            <div class="row my-3">
+                <p>
+                    Die mit * gekennzeichneten Felder 21, 22, 30, 31 und 32 müssen nicht
+                    von Familienangehörigen von Unionsbürgern, Staatsangehörigen des EWR
+                    oder der Schweiz ausgefüllt werden. Die Felder 1-3 sind entsprechend
+                    den Angaben im Reisedokument auszufüllen. / اليجب على أقرباء األشخاص
+                    المنحدرين من دول االتحاد األوروبي أو الفضاء االقتصادي األوروبي أو
+                    الكونفدرالية السويسرية تعبئة الخانات .32,31,30,22,21 المشمولة بعالمة
+                    )*(.يجب أن تتوافق بيانات الخانات من 1 إلى 3 مع البيانات المتضمنة في
+                    وثيقة السفر.
+                </p>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-9 p-0 border border-1 border-dark">
+                    <p class="border-bottom border-1 border-dark">
+                        1. Name (Familienname)/ اللقب(اللقب العائلى) :  @FirstName
+                    </p>
+                    <p class="border-bottom border-1 border-dark">
+                        2. Familienname bei der Geburt (frühere(r) Familienname(n))/اللقب
+                        عند الولادة(اللقب العائلى السابق) : @MiddleName
+
+                    </p>
+                    <p class="border-bottom border-1 border-dark mb-0">
+                        3. Vorname(n)/الاسم
+                        @SurName
+                    </p>
+
+                    <div class="row m-0">
+                        <div class="col-4 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                4. Geburtsdatum (Tag-Monat-Jahr)/<br />
+                                تاريخ الوالدة (السنة-الشهر-اليوم) :
+                            </p>
+                            <div class="py-5 w-100 bg-light">@dateOfBirth</div>
+                        </div>
+
+                        <div class="col-4 m-0 p-0 border border-1 border-dark">
+                            <p>5. Geburtsort/ مكان الولادة : <br /></p>
+                            <div class="py-3 w-100 bg-light">@placeOfBirth</div>
+                            <p>6. Geburtsland/ بلد الوالدة : <br /></p>
+                            <div class="py-4 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-4 m-0 p-0 border border-1 border-dark">
+                            <p>7. Derzeitige Staatsangehörigkeit/ الجنسية الحالية: @CurrentNationality<br /></p>
+                            <div class="py-1 w-100 bg-light"></div>
+                            <p>
+                                Staatsangehörigkeit bei der Geburt (falls nicht wie oben) /
+                                الجنسية عند الولاة ان كانت مختلفة : <br />
+                            </p>
+                            <div class="py-1 w-100 bg-light">@placeOfBirth</div>
+                            <p>Andere Staatsangehörigkeiten / جنسيات اخرى : <br /></p>
+                            <div class="py-1 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-4 m-0 p-0 border border-1 border-dark">
+                            <p class="p-0 m-0">8. Geschlecht/</p>
+                            @if (Gender != null && Gender.ToLower() == "male")
+                            { <input type="checkbox" name="" id="" checked /> @Html.Raw("männlich / ذكر <br/>")}
+                            else
+                            { <input type="checkbox" name="" id="" /> @Html.Raw("männlich / ذكر <br/>")}
+                            @if (Gender != null && Gender.ToLower() == "female")
+                            {<input type="checkbox" name="" id="" checked /> @Html.Raw("weiblich / انثى <br/>") }
+                            else
+                            { <input type="checkbox" name="" id="" /> @Html.Raw("weiblich / انثى <br/>")}
+                        </div>
+
+                        <div class="col-8 m-0 p-0 border border-1 border-dark">
+                            <p class="p-0 m-0">8. Familienstand/ الحالة االجتماعية</p>
+                            <input type="checkbox" name="" id="" /> ledig / أغزب <br />
+                            <input type="checkbox" name="" id="" /> verheiratet / متزوج(ة)<br />
+                            <input type="checkbox" name="" id="" /> eingetragene Partnerschaft
+                            / شراكة مسجلة<br />
+                            <input type="checkbox" name="" id="" /> getrennt / منفصل(ة)<br />
+                            <input type="checkbox" name="" id="" /> geschieden / مطلق(ة)<br />
+                            <input type="checkbox" name="" id="" /> verwitwet / أرمل(ة)<br />
+                            <input type="checkbox" name="" id="" /> Sonstiges (bitte nähere
+                            Angaben) / حالات اخرى (الرجاء الايضاح)<br />
+                        </div>
+
+                        <div class="col-12 m-0 p-0 border border-1 border-dark">
+                            <p class="p-0 m-0">
+                                10. Inhaber der elterlichen Sorge (bei Minderjährigen) /Vormund
+                                (Name, Vorname, Anschrift, falls abweichend von der des
+                                Antragstellers, Telefonnummer, E-Mail-Adresse und
+                                Staatsangehörigkeit) / السلطة الابوية(بالنسبة للقاصرين) الولى
+                                الشرعى (الاسم العائلى , الاسم الشخصى , العنوان(ان كان مختلفا عن
+                                عنوان المتقدم بالطلب ) , رقم الهاتف , العنوان الالكترونى)
+                            </p>
+                            <div class="py-3 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-12 m-0 p-0 border border-1 border-dark">
+                            <p class="p-0 m-0">
+                                11. ggf. nationale Identitätsnummer / الرقم الوطنى للهوية
+                            </p>
+                            <div class="py-3 w-100 bg-light">@NationalIdentityNumber</div>
+                        </div>
+
+                        <div class="col-12 m-0 p-0 border border-1 border-dark">
+                            <p>12. Art des Reisedokuments/ نوع وثيقة السفر</p>
+                            <input type="checkbox" name="" id="" /> Normaler Pass / جواز سفر
+                            عادي <br />
+                            <input type="checkbox" name="" id="" /> Diplomatenpass / جواز سفر
+                            ديبلوماسي<br />
+                            <input type="checkbox" name="" id="" /> Dienstpass / جواز سفر
+                            للخدمة <br />
+                            <input type="checkbox" name="" id="" /> Amtspass / جواز سفر رسمي
+                            <br />
+                            <input type="checkbox" name="" id="" /> Sonderpass / جواز سفر
+                            خاص<br />
+                            <input type="checkbox" name="" id="" /> verwitwet / أرمل(ة)<br />
+                            <input type="checkbox" name="" id="" /> Sonstiges Reisedokument
+                            (bitte nähere Angaben ) / وثائق سفر اخرى (الرجاء الايضاح)<br />
+                        </div>
+
+                        <div class="col-3 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                13. Nummer des Reisedokuments/<br />
+                                :رقم وثيقة السفر
+                            </p>
+                            <div class="py-5 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-3 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                14. Ausstellungsdatum//<br />
+                                :تاريخ الاصدار
+                            </p>
+                            <div class="py-5 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-3 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                15. Gültig bis /<br />
+                                :تاريخ انتهاء الصالحية
+                            </p>
+                            <div class="py-5 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-3 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                16. Ausstellt durch (Land) /<br />
+                                :جهة الاصدار
+                            </p>
+                            <div class="py-5 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-12 m-0 p-0 border border-1 border-dark">
+                            <p class="p-0 m-0">
+                                17. Personenbezogene Daten des Familienangehörigen, der
+                                Unionsbürger oder Staatsangehöriger des EWR oder der Schweiz ist
+                                – falls zutreffend / :بيانات شخصية للقريب الحامل لجنسية إحدى دول
+                                االتحاد األوروبي أو الفضاء االقتصادي األوروبي أو الكونفدرالية
+                                السويسرية، إن اقتضى الحال
+                            </p>
+                            <div class="py-3 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-6 m-0 p-0 border border-1 border-dark">
+                            <p class="p-0 m-0">Nachname (Familienname ) / اللقب</p>
+                            <div class="py-3 w-100 bg-light">@SurName</div>
+                        </div>
+
+                        <div class="col-6 m-0 p-0 border border-1 border-dark">
+                            <p class="p-0 m-0">Vorname (n) / الاسم / الاسماء المعتادة</p>
+                            <div class="py-3 w-100 bg-light">@FirstName</div>
+                        </div>
+
+                        <div class="col-4 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                Geburtsdatum (Tag-Monat-Jahr) /
+                                <br />
+                                (اليوم-الشهر-السنة) تاريخ الوالدة
+                            </p>
+                            <div class="py-4 w-100 bg-light">@dateOfBirth</div>
+                        </div>
+
+                        <div class="col-4 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                Staatsangehörigkeit /<br />
+                                :لجنسية
+                            </p>
+                            <div class="py-4 w-100 bg-light">@CurrentNationality</div>
+                        </div>
+
+                        <div class="col-4 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                Nummer des Reisedokuments oder des Personalausweises /<br />
+                                :رقم وثيقة السفر أو بطاقة الهوية
+                            </p>
+                            <div class="py-3 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-12 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                18. Verwandtschaftsverhältnis zum Unionsbürger oder
+                                Staatsangehörigen des EWR oder der Schweiz – falls zutreffend /
+                                نوع القرابة بين الشخص المنحدر من االتحاد األوروبي أو الفضاء
+                                االقتصادي األوروبي أو الكونفدرالية السويسرية، إن اقتضى الحال
+                            </p>
+
+                            <input type="checkbox" name="" id="" /> Ehegatte / زوج(ة)<br />
+                            <input type="checkbox" name="" id="" /> Kind / إبن/بنت<br />
+                            <input type="checkbox" name="" id="" /> Enkelkind / حفيد(ة)<br />
+                            <input type="checkbox" name="" id="" /> abhängiger Verwandter in
+                            aufsteigender Linie / صل معول<br />
+                            <input type="checkbox" name="" id="" /> eingetragener Partner /
+                            شراكة مسجلة<br />
+                            <input type="checkbox" name="" id="" /> Sonstiges / روابط أخرى<br />
+                        </div>
+
+                        <div class="col-6 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                19. Wohnanschrift und E-Mail-Anschrift des Antragstellers /<br />
+                                :عنوان محل اإلقامة والبريد اإللكتروني لصاحب الطلب
+                            </p>
+                            <div class="py-4 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-6 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                Telefonnummer(n) /<br />
+                                :رقم الهاتف
+                            </p>
+                            <div class="py-3 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-12 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                20. Wohnsitz in einem anderen Staat als dem der derzeitigen
+                                Staatsangehörigkeit / إقامة في بلد غير بلد الجنسية الحالية
+                            </p>
+
+                            <input type="checkbox" name="" id="" /> Nein / لا<br />
+                            <input type="checkbox" name="" id="" /> Ja / نعم<br />
+                            Aufenthaltstitel oder gleichwertiges Dokument / ترخيص اإلقامة أو
+                            مايعادله <br />
+                            Nr. / رقم <br />
+                            Gültig bis / تاريخ الانتهاء
+                        </div>
+
+                        <div class="col-12 m-0 p-0 border border-1 border-dark">
+                            <p>* 21. Derzeitige berufliche Tätigkeit / الوظيفة الحالية</p>
+                            <div class="py-3 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-12 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                * 22. Name, Anschrift und Telefonnummer des Arbeitgebers. Bei
+                                Studenten Name und Anschrift der Bildungseinrichtung/ إسم صاحب
+                                العمل وعنوانه ورقم الهاتف الخاص به بالنسبة للطلبة، اسم وعنوان
+                                مؤسسة التعليم
+                            </p>
+                            <div class="py-3 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-12 m-0 p-0 border border-1 border-dark">
+                            <p>23. Zweck(e) der Reise / دواعي: الرحلة</p>
+
+                            <input type="checkbox" name="" id="" /> Tourismus / سياحة<br />
+                            <input type="checkbox" name="" id="" /> Geschäftsreise / أعمال<br />
+                            <input type="checkbox" name="" id="" /> Besuch von
+                            Familienangehörigen oder Freunden /زيارة العائلة أو الاصدقاء<br />
+                            <input type="checkbox" name="" id="" /> Kultur / ثقافة <br />
+                            <input type="checkbox" name="" id="" /> Sport / رياضة<br />
+                            <input type="checkbox" name="" id="" /> Offizieller Besuch / زيارة
+                            رسمية<br />
+                            <input type="checkbox" name="" id="" /> Gesundheitliche Gründe /
+                            أسباب طبية<br />
+                            <input type="checkbox" name="" id="" /> Studium / دراسة<br />
+                            <input type="checkbox" name="" id="" /> Flughafentransit / عبور
+                            مطار<br />
+                            <input type="checkbox" name="" id="" /> Sonstiges (bitte nähere
+                            Angaben) / اسباب أخرى (للايضاح)<br />
+                        </div>
+
+                        <div class="col-12 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                24. Weitere Informationen zum Aufenthaltszweck / بيانات تكميلية
+                                حول سبب السفر
+                            </p>
+                            <div class="py-3 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-6 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                25. Mitgliedstaat der Hauptbestimmung (und andere
+                                Bestimmungsmitgliedstaaten, falls zutreffend / الوجهة الرئيسية
+                                (ووجهات أخرى، إن وجدت)<br />
+                                :رقم الهاتف
+                            </p>
+                            <div class="py-3 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-6 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                26. Mitgliedstaat der ersten Einreise / /<br />
+                                :الوجهة الاولى للدخول بتأشيرة شينغن
+                            </p>
+                            <div class="py-3 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-12 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                27. Anzahl der beantragten Einreisen / عدد مرات الدخول المطلوبة
+                            </p>
+
+                            <input type="checkbox" name="" id="" /> / Einmalige Einreise /
+                            دخول مرة واحدة<br />
+                            <input type="checkbox" name="" id="" /> / Zweimalige Einreise /
+                            دخول مرتين <br />
+                            <input type="checkbox" name="" id="" /> / Mehrfache Einreise /
+                            دخول عدة مرات<br />
+
+                            Datum der geplanten Ankunft des ersten geplanten Aufenthalts im
+                            Schengen-Raum / تاريخ الوصول المتوقع بالنسبة لإلقامة الاولى في
+                            فضاء شينغن <br />
+                            <div class="py-2 w-100 bg-light"></div>
+
+                            Datum der geplanten Abreise aus dem Schengen-Raum nach dem ersten
+                            geplanten Aufenthalt / تاريخ الذهاب المتوقع من فضاء شينغن بعد
+                            الاقامة الاولى <br />
+                            <div class="py-2 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-12 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                28. Wurden Ihre Fingerabdrücke bereits für die Zwecke eines
+                                Antrags auf ein Schengen-Visum erfasst? / هل سبق لك رفع بصمات
+                                األصابع لطلب الحصول على تأشيرة شينغن
+                            </p>
+
+                            <input type="checkbox" name="" id="" /> / Nein / لا
+
+                            <span class="mx-5"></span>
+                            <input type="checkbox" name="" id="" /> / Ja / نعم <br />
+
+                            Datum (falls bekannt)…………….Nummer der Visummarke, falls
+                            bekannt……………………
+                            <br />
+                            التاريخ إن كان معروفا ..... .......... ............... ً رقم لصيقة
+                            التأشيرة إن كان معروفا ..........ا
+                            <div class="py-2 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-12 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                29. Ggf Einreisegenehmigung für das Endbestimmungsland / تصريح
+                                الدخول إلى الوجهة النهائية، إن اقتضى الحال
+                            </p>
+                            Ausgestellt durch / مسلم من قبل ..................................
+                            <br />
+                            gültig von / صالح من................... bis / الى
+                            .........................
+                        </div>
+
+                        <div class="col-12 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                * 30. Name und Vorname der einladenden Person(en) in dem
+                                Mitgliedstaat bzw. den Mitgliedstaaten. Soweit dies nicht
+                                zutrifft, bitte Name des/der Hotels oder vorübergehende
+                                Unterkunft (Unterkünfte) in dem (den) betreffenden
+                                Mitgliedstaat(en) angeben / /<br />
+                                إسم ولقب الشخص أو األشخاص أصحاب الدعوة في البلد او البلدان
+                                األعضاء في دول شينغن, وإن لم يتح ذلك، إسم الفندق أو الفنادق أو
+                                أماكن اإلقامة المؤقتة في الدولة العضو أو الدول الاعضاء .
+                            </p>
+                            <div class="py-3 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-6 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                Anschrift und E-Mail-Anschrift der einladenden Person(en) /
+                                jedes Hotels / jeder vorübergehenden Unterkunft /<br />
+                                عنوان والبريد اإللكتروني للشخص أو األشخاص أصحاب الدعوة/للفندق أو
+                                الفنادق/لمكان أو أماكن اإلقامة
+                            </p>
+                            <div class="py-3 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-6 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                Telefonnummer(n) / <br />
+                                رقم الهاتف
+                            </p>
+                            <div class="py-3 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-12 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                *31. Name und Adresse des einladenden Unternehmens/der
+                                einladenden Organisation / <br />
+                                إسم وعنوان المنظمة أو المؤسسة المستضيفة
+                            </p>
+                            <div class="py-3 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-6 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                Name, Vorname, Anschrift, Telefonnummer(n) und E-Mail-Adresse
+                                der Kontaktperson im Unternehmen/in der Organisation/<br />
+                                إسم ولقب وعنوان ورقم الهاتف والفاكس والعنوان اإللكتروني لمسؤول
+                                االتصال بالمؤسسة/المنظمة
+                            </p>
+                            <div class="py-3 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-6 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                Telefonnummer(n) des Unternehmens/der Organisation/ <br />
+                                هاتف وفاكس المؤسسة أو المنظمة
+                            </p>
+                            <div class="py-3 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-12 m-0 p-0 border border-1 border-dark">
+                            <p>
+                                *32. Die Reisekosten und die Lebenshaltungskosten während des
+                                Aufenthalts des Antragstellers werden getragen /<br />
+                                :تُمول مصاريف السفر والعيش خالل مدة اإلقامة
+                            </p>
+                            <div class="py-3 w-100 bg-light"></div>
+                        </div>
+
+                        <div class="col-6 m-0 p-0 border border-1 border-dark">
+                            <input type="checkbox" name="" id="" /> vom Antragsteller selbst /
+                            من طرفكم <br />
+
+                            <p>Mittel zur Bestreitung des Lebensunterhalts/ موارد العيش</p>
+                            <input type="checkbox" name="" id="" /> Bargeld / سيولة نقدية<br />
+                            <input type="checkbox" name="" id="" /> Reiseschecks / شيكات سفر
+                            سياحية<br />
+                            <input type="checkbox" name="" id="" /> Kreditkarte /بطاقة ائتمان
+                            /<br />
+                            <input type="checkbox" name="" id="" /> Im Voraus bezahlte
+                            Unterkunft / اقامة مسبقة الدفع<br />
+                            <input type="checkbox" name="" id="" /> Im Voraus bezahlte
+                            Beförderung / نقل مسبقة الدفع<br />
+                            <input type="checkbox" name="" id="" /> Sonstiges (bitte nähere
+                            Angaben) / وسائل أخرى (للايضاح)<br />
+                        </div>
+
+                        <div class="col-6 m-0 p-0 border border-1 border-dark">
+                            <input type="checkbox" name="" id="" /> von einem Sponsor
+                            (Gastgeber, Unternehmen, Organisation), bitte nähere Angaben / من
+                            قبل الضامن (المضيف، المؤسسة، المنظمة)<br />
+
+                            <input type="checkbox" name="" id="" /> Siehe Feld 30 oder 31/ 31
+                            or 30 / المشار إليه فى الخانة<br />
+                            <input type="checkbox" name="" id="" /> von sonstiger Stelle
+                            (bitte nähere Angaben) / حالات اخرى (للايضاح)<br />
+                            <p>Mittel zur Bestreitung des Lebensunterhalts/ موارد العيش</p>
+
+                            <input type="checkbox" name="" id="" /> Bargeld / سيولة نقدية<br />
+                            <input type="checkbox" name="" id="" /> Zur Verfügung gestellte
+                            Unterkunft / توفير اقامة <br />
+                            <input type="checkbox" name="" id="" /> Übernahme sämtlicher
+                            Kosten während des Aufenthalts / كل التكاليف ممّولة أثناء اإلقامة
+                            <br />
+                            <input type="checkbox" name="" id="" /> Im Voraus bezahlte
+                            Beförderung / نقل مسبقة الدفع<br />
+                            <input type="checkbox" name="" id="" /> Sonstiges (bitte nähere
+                            Angaben) / وسائل أخرى (للايضاح)<br />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-3 px-1 border border-1 border-dark">
+                    <p>
+                        RESERVIERT FÜR AMTLICHE <br />
+                        EINTRAGUNGEN
+                    </p>
+
+                    <p class="h4">Datum des Antrags:</p>
+                    <p class="h4">Entgegengenommen von:</p>
+                    <p>Nr. des Visumantrags</p>
+
+                    <p class="border-bottom border-1 border-dark">
+                        Antrag eingereicht bei <br />
+                        <input type="checkbox" name="" id="" /> Botschaft/Konsulat <br />
+                        <input type="checkbox" name="" id="" /> Gemeinsame Antragsbe <br />
+                        <input type="checkbox" name="" id="" /> arbeitungsstelle <br />
+                        <input type="checkbox" name="" id="" /> Dienstleistungserbringer
+                        <br />
+                        <input type="checkbox" name="" id="" /> Kommerzieller Vermittler
+                        <br />
+                        <input type="checkbox" name="" id="" /> LPD………… <br />
+                        <input type="checkbox" name="" id="" /> Name der (Dienst)stelle:
+                        <br />
+                    </p>
+
+                    <p class="h4">Zulässigkeitsprüfung:</p>
+                    <p>Sachbearbeiter:</p>
+
+                    <p class="border-bottom border-1 border-dark">
+                        Datum: <br />
+                        <input type="checkbox" name="" id="" /> Zulässig <br />
+                        <input type="checkbox" name="" id="" /> Unzulässig <br />
+                    </p>
+
+                    <p class="h4">Akte bearbeitet durch:</p>
+
+                    <p class="border-bottom border-1 border-dark">
+                        Belege: <br />
+                        <input type="checkbox" name="" id="" /> Reisedokument <br />
+                        <input type="checkbox" name="" id="" /> Mittel zur Bestreitung des
+                        Lebensunterhalts <br />
+                        <input type="checkbox" name="" id="" /> Einladung <br />
+                        <input type="checkbox" name="" id="" /> Beförderungsmittel <br />
+                        <input type="checkbox" name="" id="" /> Reisekrankenversiche- rung
+                        <br />
+                        <input type="checkbox" name="" id="" /> Beschäftigungsbewilligung
+                        <br />
+                        <input type="checkbox" name="" id="" /> Sonstiges <br />
+                    </p>
+
+                    <p class="h4">Antrag entschieden von:</p>
+
+                    <p class="border-bottom border-1 border-dark">
+                        Datum: <br />
+                        Visum: <br />
+                        <input type="checkbox" name="" id="" /> Abgelehnt <br />
+                        <input type="checkbox" name="" id="" /> Erteilt <br />
+                        <input type="checkbox" name="" id="" /> A <br />
+                        <input type="checkbox" name="" id="" /> C <br />
+                        <input type="checkbox" name="" id="" /> Visum mit räumlich <br />
+                        beschränkter Gültigkeit <br />
+                        <input type="checkbox" name="" id="" /> Gültig<br />
+                        vom …..<br />
+                        bis…..<br />
+                        Anzahl der Einreisen <br />
+                        <input type="checkbox" name="" id="" /> 1
+                        <input type="checkbox" name="" id="" /> 2
+                        <input type="checkbox" name="" id="" /> mehrfach <br />
+                        Anzahl der Tage:
+                    </p>
+
+                    <p class="h4">Visumdruck von (inkl. Datum):</p>
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-12 py-2 border border-1 border-dark">
+                    Mir ist bekannt, dass die Visumgebühr im Falle der Visumverweigerung
+                    nicht erstattet wird. Im Falle der Beantragung eines Visums für die
+                    mehrfache Einreise: Mir ist bekannt, dass ich über eine angemessene
+                    Reisekrankenversicherung für meinen ersten Aufenthalt und jeden
+                    weiteren Besuch im Hoheitsgebiet der Mitgliedstaaten verfügen muss.
+                    Mir ist bekannt und ich bin damit einverstanden, dass zur Prüfung
+                    meines Antrags die in diesem Antragsformular geforderten Daten erhoben
+                    werden müssen, ein Lichtbild von mir gemacht werden muss und
+                    gegebenenfalls meine Fingerabdrücke abgenommen werden müssen. Die
+                    Angaben zu meiner Person, die in diesem Antrag enthalten sind, sowie
+                    meine Fingerabdrücke und mein Lichtbild werden zur Entscheidung über
+                    meinen Antrag an die zuständigen Behörden der Mitgliedstaaten
+                    weitergeleitet und von diesen Behörden bearbeitet.. Diese Daten sowie
+                    Daten in Bezug auf die Entscheidung über meinen Antrag oder eine
+                    Entscheidung zur Annullierung, Aufhebung oder Verlängerung eines
+                    Visums werden in das Visa-Informationssystem (VIS) eingegeben und dort
+                    höchstens fünf Jahre gespeichert; die Visumbehörden und die für die
+                    Visumkontrolle an den Außengrenzen und in den Mitgliedstaaten
+                    zuständigen Behörden sowie die Einwanderungs- und Asylbehörden in den
+                    Mitgliedstaaten haben während dieser fünf Jahre Zugang zu den Daten,
+                    um zu überprüfen, ob die Voraussetzungen für die rechtmäßige Einreise
+                    in das Hoheitsgebiet der Mitgliedstaaten und den rechtmäßigen
+                    Aufenthalt in diesem Hoheitsgebiet erfüllt sind, um Personen zu
+                    identifizieren, die diese Voraussetzungen nicht bzw. nicht mehr
+                    erfüllen, um einen Asylantrag zu prüfen und um zu bestimmen, wer für
+                    diese Prüfung zuständig ist. Zur Verhütung und Aufdeckung
+                    terroristischer und anderer schwerer Straftaten und zur Ermittlung
+                    wegen dieser Straftaten haben unter bestimmten Bedingungen auch
+                    benannte Behörden der Mitgliedstaaten und Europol Zugang zu diesen
+                    Daten. Die für die Verarbeitung der Daten zuständige Behörde des
+                    Mitgliedstaats ist das Bundesministerium für Inneres, Herrengasse 7,
+                    A-1014 Wien, Tel. +43-(0)1-531 26-0, post@bmi.gv.at.Mir ist bekannt,
+                    dass ich berechtigt bin, in jedem beliebigen Mitgliedstaat eine
+                    Mitteilung darüber einzufordern, welche Daten über mich im VIS
+                    gespeichert wurden und von welchem Mitgliedstaat diese Daten stammen;
+                    außerdem bin ich berechtigt zu beantragen, dass mich betreffende
+                    Daten, die unrichtig sind, berichtigt und rechtswidrig verarbeitete
+                    Daten, die mich betreffen, gelöscht werden. Die Behörde, die meinen
+                    Antrag prüft, liefert mir auf ausdrücklichen Wunsch Informationen
+                    darüber, wie ich mein Recht wahrnehmen kann, die Daten zu meiner
+                    Person zu überprüfen und unrichtige Daten gemäß den Rechtsvorschriften
+                    des betreffenden Mitgliedstaats berichtigen oder löschen zu lassen,
+                    sowie über die Rechtsbehelfe, die das Recht des betreffenden
+                    Mitgliedstaats vorsieht. Die staatliche Aufsichtsbehörde dieses
+                    Mitgliedstaats. http://www.dsb.gv.at/ ist zuständig für Beschwerden
+                    über den Schutz personenbezogener Daten. Ich versichere, dass ich die
+                    vorstehenden Angaben nach bestem Wissen und Gewissen gemacht habe und
+                    dass sie richtig und vollständig sind. Mir ist bewusst, dass falsche
+                    Erklärungen zur Ablehnung meines Antrags oder zur Annullierung eines
+                    bereits erteilten Visums führen und die Strafverfolgung nach den
+                    Rechtsvorschriften des Mitgliedstaats, der den Antrag bearbeitet,
+                    auslösen können. Ich verpflichte mich dazu, das Hoheitsgebiet der
+                    Mitgliedstaaten vor Ablauf des Visums zu verlassen, sofern mir dieses
+                    erteilt wird. Ich wurde davon in Kenntnis gesetzt, dass der Besitz
+                    eines Visums nur eine der Voraussetzungen für die Einreise in das
+                    europäische Hoheitsgebiet der Mitgliedstaaten ist. Aus der Erteilung
+                    des Visums folgt kein Anspruch auf Schadensersatz, wenn ich die
+                    Voraussetzungen nach Artikel 6 Absatz 1 der Verordnung (EU) Nr.
+                    2016/399 (Schengener Grenzkodex) nicht erfülle und mir demzufolge die
+                    Einreise verweigert wird. Die Einreisevoraussetzungen werden bei der
+                    Einreise in das europäische Hoheitsgebiet der Mitgliedstaaten erneut
+                    überprüft.
+                </div>
+                <div class="col-12 py-2 border border-1 border-dark text-end">
+                    أعلم أن رسوم التأشيرة ال يتم إرجاعها في حال رفض الطلب. في حالة طلب
+                    تأشيرة من أجل الدخول مرات متعددة: أعلم ضرورة التوفر على تأمين مناسب عن
+                    المرض خالل السفر بالنسبة إلقامتي األولى وخالل األسفار المقبلة في أراضي
+                    الدول األعضاء. بعد االطالع على هذه الوثيقة و لغاية النظر في طلب
+                    التأشيرة الذي تقدمت به، أوافق على ما يلي: ، أخذ كل المعطيات المتوفرة
+                    في هذه االستمارة و تصويري ورفع بصماتي إن اقتضى الحال. المعطيات ذات
+                    الطابع الشخصي المتضمنة في هذه االستمارة الخاصة بطلب التأشيرة ،
+                    باإلضافة إلى الصور الفوتوغرافية وبصماتي سيتم إحالتها على السلطات
+                    المختصة في الدول األعضاء التي ستقوم بمعالجتها بهدف إصدار القرار
+                    المتعلق بطلبي. هذه المعطيات باإلضافة إلى تلك المتعلقة بالقرار الراجع
+                    إلى طلب الحصول على تأشيرة أو أي قرار إلغاء أو تمديد للتأشيرة سيقع
+                    إدراجها وخزنها ضمن منظومة المعلومات حول التّأشيرات (VIS(1 خالل مدّة
+                    أقصاها خمس سنوات تكون خاللها متاحة للسّلط المكلّفة بالتّأشيرات وللسّلط
+                    المختصّة المكلّفة بمراقبة التّأشيرات على الحدود الخارجية وفي الدّول
+                    األعضاء وللسّلط المختصّة في مجال الهجرة واللّجوء في الدّول األعضاء
+                    بهدف التثبّت من احترام شروط الدّخول واإلقامة المنتظمة على أراضي الدّول
+                    األعضاء وبهدف تحديد األشخاص الذّين ال تتوفّر فيهم أو لم تعد تتوفر فيهم
+                    هذه الشّروط وبهدف دراسة مطالب اللّجوء وتحديد السّلطات المسؤولة عن هذه
+                    المراجعة، طبقا لبعض الشّروط، تكون هذه المعطيات متاحة للسّلطات المعيّنة
+                    من قبل الدّول األعضاء ومكتب الشرطة األوروبي من أجل الوقاية وتحدي د
+                    الجرائم اإلرهابية والجرائم األخرى الخطيرة باإلضافة إلى التّحقيقات في
+                    هذا المجال. Bundesministerium für Inneres, Herrengasse 7, A-1014 Wien,
+                    Tel. +43-(0)1-531 26-0, post@bmi.gv.at :هي المعطيات هذه لمعالجة
+                    المختصة هي العضو البلد سلطة لقد تم إعالمي بحقّي في الحصول لدى أ ّي بلد
+                    عضو على إخطار بالمعطيات المتعلّقة بي والمحفوظة ضمن منظومة المعلومات
+                    حول التّأشيرات باإلضافة إلى البلد العضو الذّي قام بإحالتها إلى جانب
+                    طلب تصحيح المعطيات التّي تخصّني إن كانت مغلوطة أو وقع محوها إن تمّ
+                    استعمالها بطريقة غير قانونيّة. عند مطالبتي الصّريحة، تقوم السّلطة
+                    التّي قامت بمراجعة مطلبي بإعالمي بالطّريقة التّي يمكنني من خاللها
+                    ممارسة حقّي في التثبّت من المعطيات الشخصيّة الخاصة بي وتصحيحها أو
+                    محوها إلى جانب السّبل القانونيّة المحدّدة من طرف التّشريع الدّاخلي
+                    للبلد المعنيّ. يمكن إخطار سلطة المراقبة الوطنيّة للبلد المعني
+                    )العنوان/at.gv.dsb.www://http.بالمطالب المتعلّقة بحماية المعطيات
+                    الشخصيّة. أصرّح أنّه حسب علمي، كل البيانات المقدّمة من طرفي صحيحة
+                    وكاملة. ولقد تم إعالمي بأ ّن اإلدالء ببيان خاطئ يترتّب عنه رفض مطلبي
+                    أو إلغاء التّأشيرة الممنوحة كما يمكن أن يترتب عنه متابعات جنائية ضدي
+                    تطبيقا لقوانين دولة شينغن التي تعالج الطلب. كما أتعهّد بمغادرة أراضي
+                    الدّول األعضاء إن منحت لي التّأشيرة وذك قبل انقضاء مدة صالحيتها . وقد
+                    تم إعالمي أ ّن الحصول على التّأشيرة ليس إالّ أحد شروط الدّخول إلى
+                    األراضي األوروبيّة للبلدان األعضاء. حيث أنّه في حالة تسليمي تأشيرة
+                    دخول فا ّن ذلك ال يعني بالضرورة حقي في الّتعويض إذا لم أستجب للشّروط
+                    المتضمّنة في الفصل السادس )6 ،)الفقرة األولى ، من قانون االتحاد
+                    األوروبي رقم 2016/399 )مدونة حدود شينغن( ووقع رفض مطلبي حينذاك . وتتمّ
+                    مراقبة احترام شروط الدّخول مجدّدا عند دخول التّراب األوروبي للدول
+                    األعضاء.
+                </div>
+                <div class="col-6 m-0 p-0 border border-1 border-dark">
+                    <p>
+                        Ort und Datum / والتاريخ المكان
+                    </p>
+                    <div class="py-3 w-100 bg-light"></div>
+                </div>
+                <div class="col-6 m-0 p-0 border border-1 border-dark">
+                    <p>
+                        Unterschrift / الامضاء -(für Minderjährige Unterschrift des Inhabers der elterlichen . Sorge /des Vormunds) /
+                        إمضاء السلطة الابوية/الولي الشرعي، إذا اقتضى الحال.
+                    </p>
+                    <div class="py-3 w-100 bg-light"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Option 1: Bootstrap Bundle with Popper -->
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"
+            integrity="sha512-F5QTlBqZlvuBEs9LQPqc1iZv2UMxcVXezbHzomzS6Df4MZMClge/8+gXrKw2fl5ysdk4rWjR0vKS7NNkfymaBQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+    </body>
+    </html>
+}

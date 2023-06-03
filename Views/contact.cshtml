@@ -1,0 +1,264 @@
+﻿@using Umbraco.SampleSite;
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.Contact>
+@{
+    Layout = "master.cshtml";
+    string BannerImage = "";
+  
+    
+     var BannerImageMediaPickerSingle = Model.ContactUsImage;
+    if (BannerImageMediaPickerSingle!=null)
+    {
+        BannerImage = BannerImageMediaPickerSingle.Url();
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="canonical" href="https://visa.orbscope.net/new/contact-us.html" />
+    <!-- SEO -->
+    <title> @Model.Value("titleContactSEO")</title>
+    <meta name="description" content="@Model.Value("describtionContactSEO")">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Visa | Contact Us" />
+    <meta property="og:url" content="https://visa.orbscope.net" />
+    <meta property="og:image" content="/images/new/logo.webp" />
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:description" content="visa titans Contact Us">
+    <meta property="og:site_name" content="Visa Titans">
+    <meta name="twitter:image:alt" content="Alt text for image">
+
+    <!-- FAVICON -->
+    <link rel="apple-touch-icon" sizes="57x57" href="~/favicons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="~/favicons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="~/favicons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="~/favicons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="~/favicons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="~/favicons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="~/favicons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="~/favicons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/favicons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="~/favicons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="~/favicons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/favicons/favicon-16x16.png">
+    <link rel="manifest" href="~/favicons/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="favicons/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- CSS Styles -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" />
+    <link rel="stylesheet" href="~/css/layout.min.css">
+    <link rel="stylesheet" href="~/css/contact.min.css">
+
+</head>
+<body class="homepage-9 hp-6 homepage-1 ">
+    <div class="overlay"></div>
+    <div class="loader-overlay invisible ">
+        <div class="loader">
+        <div class="stick1"></div>
+        <div class="stick2"></div>
+        <div class="stick3"></div>
+        <div class="stick4"></div>
+        </div>
+    </div>
+    <!-- Wrapper -->
+    <div id="wrapper">
+        <!-- START SECTION HEADINGS -->
+        <!-- Header Container-->
+  
+        <nav class="nav-bar">
+       
+        </nav>
+    </div>
+     <!-- Header -->
+
+
+        <!-- STAR HEADER SEARCH -->
+        <section id="hero-area" class="parallax-searchs header-contact" data-stellar-background-ratio="0.5" style="background: url(@BannerImage) !important;">
+            <div class="hero-main">
+                <div class="container" data-aos="zoom-in">
+                    <div class="row box-header">
+                        <div class="col-12">
+                            <div class="hero-inner">
+                                <!-- Welcome Text -->
+                                <div class="welcome-text">
+                                    <h1 class="title-desc-blog"> 
+                                    @Model.Value("contactUsHeader")
+                                    </h1>
+                                </div>
+                                <!--/ End Welcome Text -->
+        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END HEADER SEARCH -->
+
+
+        
+        <!-- START SECTION CONTACT US -->
+        <section class="contact-us">
+            <h2 class="text-center pt-5 pb-2">@Model.Value("contactUsText")</h2>
+            <div id="map-contact"></div>
+        </section>
+        <!-- END SECTION CONTACT US -->
+
+        <!-- START SECTION CONTACT US -->
+        <section class="contact-us py-5 bg-white-2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12">
+               
+                        <form id="contactform" class="contact-form" name="contactform" method="post" novalidate>
+                            <div id="success" class="successform">
+                                <div class="alert alert-success alert-dismissible fade show">
+                                    Your Message Has been sent
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="error" class="errorform">
+                                <div class="alert alert-danger alert-dismissible fade show">
+                                    Something went wrong, try refreshing and submitting the form again.
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+ 
+                            <div class="form-group">
+                             <label>Country</label>
+                            <select name="Country" id="Country" class="form-control input-custom input-full">
+                                <option value="select">select</option>
+                                <option value="Egypt">Egypt</option>
+                                <option value="Saudi Arabia">Saudi Arabia</option>
+                                <option value="UAE">UAE</option>
+                                <option value="UK">UK</option>
+                                <option value="Canada">Canada</option>
+                                <option value="USA">USA</option>
+                            </select>
+                        </div>
+                            
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" required class="form-control input-custom input-full" name="name" placeholder="Name*">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="text" required class="form-control input-custom input-full" name="lastname" placeholder="Email*">
+                            </div>
+                            <div class="form-group">
+                                <label>Mobile</label>
+                                <input type="text" class="form-control input-custom input-full" name="email" placeholder="Mobile*">
+                            </div>
+                            <div class="form-group">
+                                <label>Message</label>
+                                <textarea class="form-control textarea-custom input-full" id="ccomment" name="message" required rows="8" placeholder="Message*"></textarea>
+                            </div>
+                            <button type="submit" id="submit-contact" class="btn btn-primary btn-lg">Send</button>
+                        </form>
+                        
+                    </div>
+                    <div class="col-lg-6 col-md-12 bgc">
+                        <div class="call-info contact-from-image">
+                            <img src="~/images/new/contact/travel.png" alt="contact us" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END SECTION CONTACT US -->
+
+        <!-- START FOOTER -->
+    
+        <!-- END FOOTER -->
+
+        <script src="~/js/jquery-3.5.1.min.js"></script>
+        <script src="~/js/bootstrap.min.js"></script>
+
+        
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script src="~/js/layout.min.js"></script>
+
+        <script type="text/javascript">
+
+            var locations = [
+              ['UAE Branch', 25.1867276,55.261137, '<p class="mb-3"><b>Address </b> : Office 1902, The Exchange Tower, Business Bay, Dubai</p><pclass="mb-3"><b>Phone : </b>(+971) 56 535 0523</p><pclass="mb-3">'],
+              ['Egypt Branch', 29.9715202,31.1613877, '<pclass="mb-3"><b>Address </b> : 165 N Hadaek Alahram, Giza, Egypt.</p><pclass="mb-3"><b>Phone : </b>+201093565921</p><pclass="mb-3">'],
+              ['KSA Branch', 24.7225477,47.9061633, '<pclass="mb-3"><b>Address </b> : Office 1902, The Exchange Tower, Business Bay, Dubai</p><pclass="mb-3"><b>Phone : </b>(+971) 56 535 0523</p><pclass="mb-3">'],
+              ['Canada Branch', 43.7740092,-79.0097292,  '<pclass="mb-3"><b>Address </b> : 100 Bishop Dr., Fredericton, NB</p><pclass="mb-3"><b>Phone : </b>(+971) 56 535 0523</p><pclass="mb-3">'],
+              ['UK Branch', 51.5287352,0.1785885, '<pclass="mb-3"><b>Address </b> : Office 1902, The Exchange Tower, Business Bay, Dubai</p><pclass="mb-3"><b>Phone : </b>(+971) 56 535 0523</p><pclass="mb-3">'],
+              ['USA Branch', 47.2548281,-118.6388753,  '<pclass="mb-3"><b>Address </b> : 100 Bishop Dr., Fredericton, NB</p><pclass="mb-3"><b>Phone : </b>(+971) 56 535 0523</p><pclass="mb-3">'],
+            ];
+            
+              function initMap() {
+                var myOptions = {
+                  center: new google.maps.LatLng(0, 0),
+                  zoom: 3,
+                  mapTypeId: google.maps.MapTypeId.ROADMAP
+            
+                };
+                var map = new google.maps.Map(document.getElementById("map-contact"), myOptions);
+                setMarkers(map,locations);
+            }
+            
+            function setMarkers(map,locations) {
+                var marker, i
+                var bounds = new google.maps.LatLngBounds();
+
+                for (i = 0; i < locations.length; i++)
+                {
+                    var loan = locations[i][0]
+                    var lat = locations[i][1]
+                    var long = locations[i][2]
+                    var add =  locations[i][3]
+                    
+                    latlngset = new google.maps.LatLng(lat, long);
+                    bounds.extend(latlngset);
+
+                    var marker = new google.maps.Marker({  
+                        map: map, title: loan , position: latlngset  
+                    });
+
+                    var content = "<h3>" + loan +  '</h3>' + add;
+
+                    var infowindow = new google.maps.InfoWindow();
+                    var prev_infowindow = false; 
+                    google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){ 
+                        return function() {
+                            if( prev_infowindow ) {
+                                prev_infowindow.close();
+                            }
+                            prev_infowindow = infowindow;
+                            infowindow.setContent(content);
+                            infowindow.open(map,marker);
+                        };
+                    })(marker,content,infowindow)); 
+                }
+
+                map.fitBounds(bounds);
+                map.panToBounds(bounds); 
+            }
+        </script>
+        <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC786aLOuSxPD1Yhx4G9irbVGSoDdHZCOk&callback=initMap"></script>
+
+
+    </div>
+    <!-- Wrapper / End -->
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Web.Common.Models
+@using Umbraco.Cms.Web.Common.Security
+@using Umbraco.Cms.Web.Website.Controllers
+@using Umbraco.Cms.Core.Services
+@using Umbraco.Extensions
+@inject IMemberExternalLoginProviders memberExternalLoginProviders
+@inject ITwoFactorLoginService twoFactorLoginService
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+         var loginProviders = await memberExternalLoginProviders.GetMemberProvidersAsync();
+    var externalSignInError = ViewData.GetExternalSignInProviderErrors();
+
+     var isLoggedIn = Context.User?.Identity?.IsAuthenticated ?? false;
+}
+
+<!-- START SECTION 1 bg-white  -->
+            <section class="about-box">
+                <div class="cost">
+                    <h3>
+                        Total Cost : 1000 EGP
+                    </h3>
+                </div>
+    
+                <div class="data">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row shop-tracking-status justify-content-center">
+                                     <div class="col-12" id="service_list">
+                                        <div class="accordion mb-5 accordionServicetoappend" id="accordionServiceAdd">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-12 Applicant_select">
+                                        <div class="row">
+                                            <div class="col-lg-7 col-md-7 col-12">
+                                                <label for="">Choose Services</label> <br>
+                                                <select name="" id="service-selector">
+                                                    <option value="">Choose Services</option>
+                                                    <option value="Hotel Booking">Hotel Booking</option>
+                                                    <option value="Flight Reservation"> Flight Reservation </option>
+                                                    <option value="Travel Insurance"> Travel Insurance</option>
+                                                    <option value="Translation"> Translation</option>
+                                                    <option value=" Photo Print"> Photo Print</option>
+                                                    <option value="Embassy Reservation"> Embassy Reservation</option>
+                                                    <option value="Pick up and delivery"> Pick up and delivery</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-lg-10 col-12">
+                                        <div class="service_content service_content_decription my-3" style="display: none;">
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                                incididunt ut labore et dolore gna a. Ut enim ad minim veniam,
+                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                                incididunt ut labore et dolore gna a. Ut enim ad minim veniam,
+                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                                incididunt ut labore et dolore gna a. Ut enim ad minim veniam,
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <form action="" class="col-12 applicants_form my-3" style="display: none;">
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-8 col-12 mx-auto">
+                                        <label class="col-form-label-lg w-100 text-white" for="">Choose Applicant</label>
+                                        <input type="radio" id="Applicant1" value="Moaz Ali" />
+                                        <label class="col-form-label-lg w-100 text-white" for="Applicant1">Moaz Ali</label>
+                                        <input type="radio" id="Applicant2" value="Fatma Mohamed" />
+                                        <label class="col-form-label-lg w-100 text-white" for="Applicant2">Fatma Mohamed</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="add_button col-12 col-lg-3 ml-auto" style="display:none ;">
+                                        <button type="button" id="add_service_btn" class="btn page_buttons">Add Service</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="col-12">
+                                <div class="row justify-content-center">
+                                    <div class="col-12 text-right my-3 d-flex">
+                                        <a id="frm4cancel" class="page_buttons bg-dark" href="javascript:;">Cancel</a>
+                                        <a id="frm4back" class="page_buttons bg-dark ml-auto" href="javascript:;">Back</a>
+                                        <a id="frm4next" class="page_buttons" href="javascript:;">Next</a>
+                                        <a id="form4save" class="page_buttons" href="javascript:;">Save</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>

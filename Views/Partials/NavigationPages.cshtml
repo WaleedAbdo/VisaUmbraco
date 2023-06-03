@@ -1,0 +1,96 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Web.Common.Models
+@using Umbraco.Cms.Web.Common.Security
+@using Umbraco.Cms.Web.Website.Controllers
+@using Umbraco.Cms.Core.Services
+@using Umbraco.Extensions
+@inject IMemberExternalLoginProviders memberExternalLoginProviders
+@inject ITwoFactorLoginService twoFactorLoginService
+@{
+    var site = Model.Root();
+    var selection = site.Children.Where(x => x.IsVisible());
+
+        var loginProviders = await memberExternalLoginProviders.GetMemberProvidersAsync();
+    var externalSignInError = ViewData.GetExternalSignInProviderErrors();
+}
+<nav class="navbar navbar-expand-lg justify-content-around">
+    <a class="nav-link @Html.Raw(Model.Id == site.Id ? "navi-link--active" : "")" href="@site.Url()">
+        <img src="~/images/new/logo.webp" alt="Logo" title="Visa">
+    </a>
+    <button class="navbar-toggler collapsed bg-light" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-around" id="navbarText">
+        <ul class="navbar-nav">
+            <li class="nav-item nav-title d-flex d-sm-flex d-md-flex d-lg-none align-items-center">
+                Menu
+                <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @Html.Raw(Model.Id == site.Id ? " navi-link--active" : "" )" href="@site.Url()">@site.Name="Waleed"</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" @Html.Raw(Model.Id == site.Id ? " navi-link--active" : "" )" href="@site.Url()">@site.Name</a>
+            </li>
+            <li id="track_your_request" class="nav-item">
+                <a onclick="show_and_hide()" href="#" class="nav-link">Track Your Request</a>
+                <form action="check_status.html" method="get">
+                    <div id="track_your_request_menu">
+                        <div id="close_menu">
+                            <i onclick="close_menu()" class="fas fa-times"></i>
+                        </div>
+
+                        <label for="">Reference Number</label>
+                        <input type="text">
+                        <label for="">Passport Number</label>
+                        <input type="text">
+                        <label for="">Date Of Birth</label>
+                        <input type="text" id="birthdatepicker" placeholder="dd-mm-yyyy">
+                        <div class="track_your_request_button">
+                            <button>Check Status</button>
+                        </div>
+                    </div>
+                </form>
+            </li>
+            <li class="nav-item"><a href="about.html" class="nav-link">About Us</a></li>
+            <li class="nav-item"><a href="contact-us.html" class="nav-link">Contact Us</a></li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item mx-3">
+
+              @foreach (var login in await memberExternalLoginProviders.GetMemberProvidersAsync())
+        {
+
+            @using (Html.BeginUmbracoForm<UmbExternalLoginController>(nameof(UmbExternalLoginController.ExternalLogin)))
+            {
+                <button class="nav-link btn btn-outline-danger border-radius-10 ml-auto" type="submit" name="provider" value="@login.ExternalLoginProvider.AuthenticationType">
+                    Login
+                </button>
+
+                if (externalSignInError?.AuthenticationType == login.ExternalLoginProvider.AuthenticationType)
+                {
+                    @Html.DisplayFor(x => externalSignInError.Errors);
+                }
+            }
+        }
+        
+                @*<a href="login.html" class="nav-link btn btn-outline-danger border-radius-10 ml-auto">Login</a>
+                *@
+            </li>
+            <li class="nav-item mx-1"><a href="sign_up1.html" class="nav-link btn btn-outline-danger border-radius-10">Sign Up</a></li>
+            <li class="nav-item mx-1 dropdown">
+                <a class="nav-link dropdown-toggle btn btn-outline-danger border-radius-10" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    EN
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item text-right" href="#">العربية</a>
+                </div>
+            </li>
+        </ul>
+        <span class="navbar-text text-danger">
+            <span><i class="fas fa-phone-volume"></i> 023-691-456-978</span>
+        </span>
+    </div>
+</nav>

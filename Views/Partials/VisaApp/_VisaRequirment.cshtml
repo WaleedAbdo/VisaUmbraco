@@ -1,0 +1,191 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Web.Common.Models
+@using Umbraco.Cms.Web.Common.Security
+@using Umbraco.Cms.Web.Website.Controllers
+@using Umbraco.Cms.Core.Services
+@using Umbraco.Extensions
+@inject IMemberExternalLoginProviders memberExternalLoginProviders
+@inject ITwoFactorLoginService twoFactorLoginService
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var loginProviders = await memberExternalLoginProviders.GetMemberProvidersAsync();
+    var externalSignInError = ViewData.GetExternalSignInProviderErrors();
+
+    var isLoggedIn = Context.User?.Identity?.IsAuthenticated ?? false;
+}
+<!-- START SECTION 1 bg-white  -->
+<section class="about-box">
+    <div class="data container-fluid">
+        <div class="row shop-tracking-status justify-content-center">
+            <div class="col-12">
+                <div class="well">
+                    <div class="order-status">
+                        <div class="order-status-timeline">
+                            <div class="order-status-timeline-completion c5"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-one active img-circle">
+                            <span class="status">PERSONAL & HOME DETAILS</span>
+                        </div>
+                        <div class="image-order-status image-order-status-two hidden_div active img-circle">
+                            <span class="status">FATHER <br> DETAILS</span>
+                        </div>
+                        <div class="image-order-status image-order-status-three hidden_div active img-circle">
+                            <span class="status">PASSPORT <br> DETAILS</span>
+                        </div>
+                        <div class="image-order-status image-order-status-four active img-circle">
+                            <span class="status">EMPLOYMENT <br> DETAILS</span>
+                        </div>
+                        <div class="image-order-status image-order-status-five hidden_div  active img-circle">
+                            <span class="status">FATHER <br> DETAILS</span>
+                        </div>
+                        <div class="image-order-status image-order-status-six hidden_div  active img-circle">
+                            <span class="status">MOTHER <br> DETAILS</span>
+                        </div>
+                        <div class="image-order-status image-order-status-seven disabled img-circle">
+                            <span class="status"> PAYMENT <br> MATHOD</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="Add_select w-100">
+
+                    <h3  class="form_title displayTitletext text-center text-white totalcost">
+                    
+                    </h3>
+                    <div class="container d-none" id="details_tables">
+                        <div class="table-responsive">
+                            <table class="details table_details_aw table">
+                                <tr>
+                                    <td class="text-left">
+                                        Applicant Name
+                                    </td>
+                                    <td class="text-center">____________</td>
+                                    <td class="text-right appname">
+                                         <a href="javascript:;" class="btn_edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">
+                                        Destination Country
+                                    </td>
+                                    <td class="text-center">____________</td>
+                                    <td class="text-right destinationcountry">
+                                         <a href="javascript:;" class="btn_edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">
+                                        Visa Type
+                                    </td>
+                                    <td class="text-center">____________</td>
+                                    <td class="text-right visatype">
+                                         <a href="javascript:;" class="btn_edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">
+                                        Proccessing
+                                    </td>
+                                    <td class="text-center">____________</td>
+                                    <td class="text-right processing">
+                                         <a class="btn_edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">
+                                        Total Fees
+                                    </td>
+                                    <td class="text-center">____________</td>
+                                    <td class="text-right totalfee">
+                                         <a href="javascript:;" class="btn_edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                     
+                    </div>
+                </div>
+                <div class="text-center my-3">
+                    <span id="show_details">More Details.....</span>
+                </div>
+            </div>
+            <div class="col-12 justify-content-center aligh-items-center d-flex">
+                <input class="trigger_input" type="radio" id="Applicant" name="Add" value="Applicant" onclick="show1()">
+                <label class="Applicant_label" for="Applicant">Add Applicant</label>
+                <input class="trigger_input" type="radio" id="Destination" name="Add" value="Destination" onclick="show2()">
+                <label class="Destination_label" for="Destination">Add Destination</label>
+            </div>
+
+            <div class="col-12">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 show1_form" style="display: none;">
+                            <form action="">
+                                <div class="row">
+                                    <div class="ml-lg-2 col-lg-6 col-md-6 col-12 mb-5">
+                                        <label class="col-label w-100">Nationality</label>
+                                        <select name="" id="frm3nationality">
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+
+                        <div class="col-12 show2_form" style="display: none;">
+                            <div class="inputs_form">
+                                <div class="inputs col-lg-6 col-md-6 col-12">
+                                    <label for="" class="w-100">Traveling To</label>
+                                    <select name="" id="frm3TravelingTo"></select>
+                                </div>
+                                <div class="inputs  col-lg-4 col-md-4 col-12">
+                                    <label for="">Purpose Of Travel</label>
+                                    <select name="" id="frm3PurposeOfTravel"></select>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+
+                       
+                        <div class="frm3bindhtml" style="display: none;">
+
+                            <div class="text-right">
+                                <a style="text-decoration: none;margin-bottom: 10px;padding: 1% 10% 1% 10%;display: inline-block;margin-top: 15px;"
+                                   class="page_buttons add_another_btn " href="javascript:;">Add Data</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-10 col-md-10 col-12 text-right my-3 d-flex">
+                        <a id="frm3cancel" class="page_buttons bg-dark" href="javascript:;">Cancel</a>
+                        <a id="frm3back" class="page_buttons bg-dark ml-auto" href="javascript:;">Back</a>
+                        <a id="frm3next" class="page_buttons" href="javascript:;">Next</a>
+                        <a id="frm3save" class="page_buttons" href="javascript:;">Save</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<!-- END SECTION 1 -->

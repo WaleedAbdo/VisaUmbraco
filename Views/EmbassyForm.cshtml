@@ -1,0 +1,11 @@
+﻿@inherits UmbracoViewPage<MyCustomUmbracoProject.Models.UserVM>
+@{
+    //Argentina Austria
+    if (Model.CountryName != null && Model.CountryName.Trim().ToLower() == "austria")
+    {@await Html.PartialAsync("~/Views/Partials/Embassy/Austria.cshtml",Model) }
+    else if (Model.CountryName != null && Model.CountryName.Trim().ToLower() == "argentina")
+    {@await Html.PartialAsync("~/Views/Partials/Embassy/Argentina.cshtml",Model) }
+    
+    
+}
+

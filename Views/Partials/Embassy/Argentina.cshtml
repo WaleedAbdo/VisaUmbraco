@@ -1,0 +1,510 @@
+﻿@inherits UmbracoViewPage<MyCustomUmbracoProject.Models.UserVM>
+@using Umbraco.Cms.Web.Common.Models
+@using Umbraco.Cms.Web.Common.Security
+@using Umbraco.Cms.Web.Website.Controllers
+@using Umbraco.Cms.Core.Services
+@using Umbraco.Extensions
+@using MyCustomUmbracoProject.Custom
+@{
+    //fatherName fatherSurname motherName motherSurname
+    //  isApplicantAMinor areYouInvitedByAFamilyOrAFriend
+    //flatHouseNumber streetNameNumber areaName city zipPostcode buildingNameNumber
+    var NodeContent = Umbraco.Content(Model.UserID);//otherNames gender currentNationality destinationCountry 
+    var FirstName = NodeContent != null && NodeContent.HasProperty("firstName") && NodeContent.HasValue("firstName") && NodeContent.Value<string>("firstName") != "" ? NodeContent.Value<string>("firstName") : string.Empty;
+    var MiddleName = NodeContent != null && NodeContent.HasProperty("middleName") && NodeContent.HasValue("middleName") && NodeContent.Value<string>("middleName") != "" ? NodeContent.Value<string>("middleName") : string.Empty;
+    var SurName = NodeContent != null && NodeContent.HasProperty("surname") && NodeContent.HasValue("surname") && NodeContent.Value<string>("surname") != "" ? NodeContent.Value<string>("surname") : string.Empty;
+    var OtherNames = NodeContent != null && NodeContent.HasProperty("otherNames") && NodeContent.HasValue("otherNames") && NodeContent.Value<string>("otherNames") != "" ? NodeContent.Value<string>("otherNames") : string.Empty;
+    var MobilePhoneNumber = NodeContent != null && NodeContent.HasProperty("mobilePhoneNumber") && NodeContent.HasValue("mobilePhoneNumber") && NodeContent.Value<string>("mobilePhoneNumber") != "" ? NodeContent.Value<string>("mobilePhoneNumber") : string.Empty;
+
+    var dateOfBirth = NodeContent != null && NodeContent.HasProperty("dateOfBirth") && NodeContent.HasValue("dateOfBirth") && NodeContent.Value<string>("dateOfBirth") != "" ? NodeContent.Value<string>("dateOfBirth") : string.Empty;
+    var placeOfBirth = NodeContent != null && NodeContent.HasProperty("placeOfBirth") && NodeContent.HasValue("placeOfBirth") && NodeContent.Value<string>("placeOfBirth") != "" ? NodeContent.Value<string>("placeOfBirth") : string.Empty;
+    var Gender = NodeContent != null && NodeContent.HasProperty("gender") && NodeContent.HasValue("gender") && NodeContent.Value<string>("gender") != "" ? NodeContent.Value<string>("gender") : string.Empty;
+    var CurrentNationality = NodeContent != null && NodeContent.HasProperty("currentNationality") && NodeContent.HasValue("currentNationality") && NodeContent.Value<string>("currentNationality") != "" ? NodeContent.Value<string>("currentNationality") : string.Empty;
+    var PreviousNationality = NodeContent != null && NodeContent.HasProperty("previousNationality") && NodeContent.HasValue("previousNationality") && NodeContent.Value<string>("previousNationality") != "" ? NodeContent.Value<string>("previousNationality") : string.Empty;
+    var MaritalStatus = NodeContent != null && NodeContent.HasProperty("maritalStatus") && NodeContent.HasValue("maritalStatus") && NodeContent.Value<string>("maritalStatus") != "" ? NodeContent.Value<string>("maritalStatus") : string.Empty;
+
+    var NationalIdentityNumber = NodeContent != null && NodeContent.HasProperty("nationalIdentityNumber") && NodeContent.HasValue("nationalIdentityNumber") && NodeContent.Value<string>("nationalIdentityNumber") != "" ? NodeContent.Value<string>("nationalIdentityNumber") : string.Empty;
+    var PassportNumber = NodeContent != null && NodeContent.HasProperty("passportNumber") && NodeContent.HasValue("passportNumber") && NodeContent.Value<string>("passportNumber") != "" ? NodeContent.Value<string>("passportNumber") : string.Empty;
+
+    var PassportDate = NodeContent != null && NodeContent.HasProperty("passportDate") && NodeContent.HasValue("passportDate") && NodeContent.Value<string>("passportDate") != "" ? NodeContent.Value<string>("passportDate") : string.Empty;
+    var PassportExpireDate = NodeContent != null && NodeContent.HasProperty("passportExpireDate") && NodeContent.HasValue("passportExpireDate") && NodeContent.Value<string>("passportExpireDate") != "" ? NodeContent.Value<string>("passportExpireDate") : string.Empty;
+
+    var FlatHouseNumber = NodeContent != null && NodeContent.HasProperty("flatHouseNumber") && NodeContent.HasValue("flatHouseNumber") && NodeContent.Value<string>("flatHouseNumber") != "" ? NodeContent.Value<string>("flatHouseNumber") : string.Empty;
+    var StreetNameNumber = NodeContent != null && NodeContent.HasProperty("streetNameNumber") && NodeContent.HasValue("streetNameNumber") && NodeContent.Value<string>("streetNameNumber") != "" ? NodeContent.Value<string>("streetNameNumber") : string.Empty;
+    var AreaName = NodeContent != null && NodeContent.HasProperty("areaName") && NodeContent.HasValue("areaName") && NodeContent.Value<string>("areaName") != "" ? NodeContent.Value<string>("areaName") : string.Empty;
+    var City = NodeContent != null && NodeContent.HasProperty("city") && NodeContent.HasValue("city") && NodeContent.Value<string>("city") != "" ? NodeContent.Value<string>("city") : string.Empty;
+    var ZipPostcode = NodeContent != null && NodeContent.HasProperty("zipPostcode") && NodeContent.HasValue("zipPostcode") && NodeContent.Value<string>("zipPostcode") != "" ? NodeContent.Value<string>("zipPostcode") : string.Empty;
+    var BuildingNameNumber = NodeContent != null && NodeContent.HasProperty("buildingNameNumber") && NodeContent.HasValue("buildingNameNumber") && NodeContent.Value<string>("buildingNameNumber") != "" ? NodeContent.Value<string>("buildingNameNumber") : string.Empty;
+
+    string LogoURL = Configuration.DomainUrl + "images/Embassy/Argentina_Embassy.png";
+    <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+      integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <title>Argentina</title>
+  </head>
+
+  <body>
+    <div class="container my-4">
+      <div class="row">
+        <div class="col-8 border-bottom border-2 border-dark mx-2">
+          <div class="row">
+            <div class="col-5">
+              <h2> <img src="@LogoURL" height="60" alt="Logo"></h2>
+            </div>
+            <div class="col-7">
+              <p class="h4">
+                ARGENTINE REPUBLIC <br />
+                CONSULAR OFFICE
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-3 border border-4 border-dark h-25">
+          <div class="row">
+            <div class="col-6"><p class="h3">FSV-</p></div>
+            <div class="col-6"><p class="h3">-2022-</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row my-3">
+        <div class="col-12 text-center">
+          <p class="h5 display-6">FSV – VISA APPLICATION FORM</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-2 text-center">
+          <p class="h6">
+            <span> <i class="fas fa-caret-right"></i></span> Print the form
+          </p>
+        </div>
+        <div class="col-6 text-center">
+          <p class="h6">
+            <span> <i class="fas fa-caret-right"></i></span> Fill out by hand up
+            to field # 50 IN BLOCK CAPITALS
+          </p>
+        </div>
+        <div class="col-4 text-center">
+          <p class="h6">
+            <span> <i class="fas fa-caret-right"></i></span> Sign and print name
+            in field # 51
+          </p>
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-12 text-center bg-dark text-light">
+          <h4 class="m-0 p-0">
+            AFFIDAVIT. FALSE INFORMATION WILL DERIVE IN EXPULSION AND RE-ENTRY
+            BAN
+          </h4>
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b>1. SURNAME</b> as it appears on the passport
+          </p>
+          <div class="py-4 w-100 bg-light">@SurName</div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b>2. NAME AND MIDDLE NAME</b> as they appear on the passport
+          </p>
+          <div class="py-4 w-100 bg-light">@FirstName @MiddleName</div>
+        </div>
+        <div class="col-12 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b> 3. OTHER NAMES OR SURNAMES</b> maiden name, religious name,
+            professional name, alias
+          </p>
+          <div class="py-4 w-100 bg-light">@OtherNames</div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b>4. FATHER </b> 4. FATHER surname, names</p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b>5. MOTHER</b> surname, names</p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-2 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b>6. Sex</b> M o F</p>
+          <div class="py-4 w-100 bg-light">@Gender</div>
+        </div>
+        <div class="col-4 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b>7. DATE OF BIRTH </b> dd/mm/yyyy</p>
+          <div class="py-4 w-100 bg-light">@dateOfBirth</div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b>8. PLACE OF BIRTH</b> city, province, country
+          </p>
+          <div class="py-4 w-100 bg-light">@placeOfBirth</div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b>9. NATIONALITY </b> current (and of origin, if applicable)
+          </p>
+          <div class="py-4 w-100 bg-light">@CurrentNationality</div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b> 10.TYPE AND NUMBER</b> OF LOCAL IDENTITY DOCUMENT OR RESIDENCY
+            CARD
+          </p>
+          <div class="py-4 w-100 bg-light">@NationalIdentityNumber</div>
+        </div>
+        <div class="col-4 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b> 11. LEBANESE FAMILY REGISTER No. </b> (only in case of Lebanese
+            origin)
+          </p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-4 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 12. HOME ADDRESS</b></p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-4 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 13. HOME TELEPHONE NUMBER</b></p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 14. E-MAIL ADDRESS</b></p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 15. MOBILE PHONE NUMBER</b></p>
+          <div class="py-4 w-100 bg-light">@MobilePhoneNumber</div>
+        </div>
+        <div class="col-4 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 16. TYPE AND PASSPORT No</b></p>
+          <div class="py-4 w-100 bg-light">@PassportNumber</div>
+        </div>
+        <div class="col-4 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 17. COUNTRY AND DATE OF ISSUANCE</b></p>
+          <div class="py-4 w-100 bg-light">@PassportDate</div>
+        </div>
+        <div class="col-4 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 18. EXPIRATION DATE </b> dd/mm/yyyy</p>
+          <div class="py-4 w-100 bg-light">@PassportExpireDate</div>
+        </div>
+        <div class="col-8 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 19. MPLOYER </b></p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-4 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 20. WORK TELEPHONE NUMBER</b></p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-4 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 21. MARITAL STATUS</b></p>
+          <div class="py-4 w-100 bg-light">@MaritalStatus</div>
+        </div>
+        <div class="col-4 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 22. OCCUPATION</b></p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-4 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 23. ACTIVITY AND POSITION</b></p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 24. PURPOSE OF THE TRIP </b></p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 25. LENGTH OF STAY</b></p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-12 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b> 26. REFERENCES IN ARGENTINA</b> people, companies, address,
+            email, telephone number
+          </p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-12 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b> 27. PLACE OF STAY IN ARGENTINA</b> address, telephone number
+          </p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b> 28. DATE OF ARRIVAL IN ARGENTINA</b> dd/mm/yyyy
+          </p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b> 29. DATE OF DEPARTURE FROM ARGENTINA</b> dd/mm/yyyy
+          </p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-12 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b> 30. SPOUSE</b> surnames, names, nationality, date of birth, will
+            he/she travel with you?
+          </p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-12 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b> 31. CHILDREN</b> surnames, names, nationality, date of birth,
+            will they travel with you?
+          </p>
+          <div class="py-5 w-100 bg-light"></div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b> 32. HAVE YOU EVER APPLIED FOR AN ARGENTINE VISA BEFORE? </b> YES
+            or NO
+          </p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+
+        <div class="col-3 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 33. WHEN DID YOU APPLY? </b> dd/mm/yyyy</p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-3 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b> 34. WHERE DID YOU APPLY? </b> Country , city
+          </p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-3 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b> 35. DID YOU ENTER WITH THAT VISA? </b> YES or NO
+          </p>
+          <div class="py-3 w-100 bg-light"></div>
+        </div>
+        <div class="col-3 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 36.WHEN DID YOU ENTER? </b> dd/mm/yyyy</p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-3 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 37. LENGTH OF THAT STAY</b></p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-3 border border-1 border-dark px-1">
+          <p class="pb-0 m-0"><b> 38. PURPOSE OF THAT TRIP</b></p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-12 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b>
+              39. DOES A SPOUSE, PARTNER, SIBLING, PARENT, OR RELATIVE RESIDE IN
+              ARGENTINA? </b
+            >who, address, telephone
+          </p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-12 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b>
+              40. LIST YOUR CITIES OF RESIDENCE FOR THE PAST THREE YEARS
+              INCLUDING DATES, STARTING WITH YOUR CURRENT PLACE OF RESIDENCE
+            </b>
+          </p>
+          <div class="py-5 w-100 bg-light"></div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b>
+              41. HAVE YOU EVER BEEN DENIED ENTRY OR BANNED FROM RE-ENTERING
+              ARGENTINA BEFORE?
+            </b>
+            YES or NO
+          </p>
+          <div class="py-3 w-100 bg-light"></div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b>
+              42. HAVE YOU EVER TRIED TO RE-ENTER OR BEEN EXPELLED FROM
+              ARGENTINA, AVOIDING MIGRATION CHECKS OR THROUGH UNAUTHORIZED
+              POINTS OR AT UNAUTHORIZED TIMES?
+            </b>
+            YES or NO
+          </p>
+          <div class="py-2 w-100 bg-light"></div>
+        </div>
+        <div class="col-12 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b>
+              43. HAVE YOU EVER BEEN SENTENCED FOR ARMS TRAFFICKING, HUMAN
+              TRAFFICKING, DRUG TRAFFICKING, MONEY LAUNDERING, INVESTMENT IN
+              ILLEGAL ACTIVITIES, OR OTHER CRIMES PUNISHABLE BY THREE OR MORE
+              YEARS OF IMPRISONMENT (EVEN IF YOU WERE LATER GRANTED A PARDON OR
+              AN AMNESTY)?
+            </b>
+            YES or NO
+          </p>
+          <div class="py-2 w-100 bg-light"></div>
+        </div>
+        <div class="col-12 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b>
+              44. HAVE YOU INCURRED OR PARTICIPATED IN ACTS OF GOVERNMENT OR
+              OTHER ACTS , THAT CONSTITUTE GENOCIDE, WAR CRIMES, ACTS OF
+              TERRORISM OR CRIMES AGAINST HUMANITY, OR IN OTHER ACTIVITIES
+              SUBJECT TO PROSECUTION BY THE INTERNATIONAL CRIMINAL COURT?
+            </b>
+            YES or NO
+          </p>
+          <div class="py-2 w-100 bg-light"></div>
+        </div>
+        <div class="col-12 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b>
+              45.DO YOU HAVE A CRIMINAL RECORD INVOLVING TERRORIST ACTIVITIES OR
+              MEMBERSHIP IN ORGANIZATIONS CHARGED WITH CRIMES SUBJECT TO
+              PROSECUTION BY THE INTERNATIONAL CRIMINAL COURT OR UNDER ARGENTINE
+              ACT 23077 (DEFENCE OF DEMOCRACY ACT)?
+            </b>
+            YES or NO
+          </p>
+          <div class="py-2 w-100 bg-light"></div>
+        </div>
+        <div class="col-12 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b>
+              46. HAVE YOU EVER BEEN SENTENCED IN ARGENTINA OR DO YOU HAVE A
+              CRIMINAL RECORD FOR THE SUBMISSION OF MATERIALLY FALSE DOCUMENTS
+              OR DOCUMENTS CONTAINING MISREPRESENTATIONS IN ORDER TO OBTAIN, FOR
+              YOURSELF OR FOR OTHERS, MIGRATION BENEFITS?
+            </b>
+            YES or NO
+          </p>
+          <div class="py-2 w-100 bg-light"></div>
+        </div>
+        <div class="col-12 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b>
+              47. DO YOU PROMOTE OR PROFIT FROM PROSTITUTION? HAVE YOU BEEN
+              SENTENCED OR DO YOU HAVE A CRIMINAL RECORD FOR PROMOTING OR
+              PROFITING FROM PROSTITUTION, OR FOR CARRYING OUT ACTIVITIES
+              INVOLVING HUMAN TRAFFICKING OR SEXUAL EXPLOITATION?
+            </b>
+            YES or NO
+          </p>
+          <div class="py-2 w-100 bg-light"></div>
+        </div>
+        <div class="col-12 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b>
+              48. HAVE YOU EVEN BEEN SENTENCED IN ARGENTINA OR DO YOU HAVE A
+              CRIMINAL RECORD FOR PROMOTING OR FACILITATING THE ILLEGAL ENTRY
+              TO, STAY IN OR DEPARTURE FROM ARGENTINE TERRITORY OF FOREIGNERS?
+            </b>
+            YES or NO
+          </p>
+          <div class="py-2 w-100 bg-light"></div>
+        </div>
+        <div class="col-12 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b>
+              49. DO YOU BELIEVE YOU MAY BE SUBJECT TO ANY RESTRICTION UNDER
+              ARGENTINE MIGRATION REGULATIONS?
+            </b>
+            YES or NO
+          </p>
+          <div class="py-2 w-100 bg-light"></div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b> 50. CITY AND DATE OF REQUEST </b>
+          </p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+        <div class="col-6 border border-1 border-dark px-1">
+          <p class="pb-0 m-0">
+            <b> 51. APPLICANT'S SIGNATURE AND PRINT NAME </b>
+          </p>
+          <div class="py-4 w-100 bg-light"></div>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-12">
+          <p>
+            The consular officer will start the visa process when receiving this
+            application form completed and signed, accompanied by the required
+            supporting documents. The visa applicant will be previously informed
+            about the required supporting documents.
+          </p>
+          <p>
+            Before issuing the visa the consular officer may require a personal
+            interview with the solicitor.
+          </p>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-12 text-end">
+          <p>
+            Colour Photograph<br />
+            4x4 cm<br />
+            White background
+          </p>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-2"></div>
+        <div class="col-8  border border-1 border-dark">
+          <p class="text-center">
+             Space left only for the consular officer’s use
+          </p>
+          <div>
+            <p class="h6">VISA CATEGORY (PERMANENT, TEMPORARY OR TRANSITORY):</p>
+            <p class="h6">MIGRATORY CRITERION:</p>
+            <p class="h6">VALIDITY OF THE VISA:</p>
+            <p class="h6">AUTHORIZED PERIOD OF STAY:</p>
+            <p class="h6">TYPE OF ENTRY: MULTIPLE OR SINGLE</p>
+            <p class="h6">DECISION OF THE CONSULAR OFFICER: </p>
+          </div>
+        </div>
+        <div class="col-2"></div>
+      </div>
+
+    </div>
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"
+      integrity="sha512-F5QTlBqZlvuBEs9LQPqc1iZv2UMxcVXezbHzomzS6Df4MZMClge/8+gXrKw2fl5ysdk4rWjR0vKS7NNkfymaBQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </body>
+</html>
+
+}

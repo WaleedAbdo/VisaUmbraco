@@ -1,0 +1,622 @@
+﻿@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels
+@using System.Globalization
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.SubArticle>
+@{
+    Layout = "master.cshtml";
+    IPublishedContent typedAuthorName = Model.AuthorName;
+
+    string AuthorBioText = "",AuthorName="", AuthorImage = "", BannerImage = "";
+    if (typedAuthorName != null)
+    {
+        AuthorName = typedAuthorName.Name;
+        var AutherPage = Umbraco.Content(typedAuthorName.Id);
+        if (AutherPage != null)
+        {
+            AuthorBioText = AutherPage.Value<string>("authorTitle");
+            var typedMediaAuthorPic = AutherPage.Value<IPublishedContent>("photo");
+            if (typedMediaAuthorPic != null)
+            {
+                AuthorImage = typedMediaAuthorPic.Url();
+            }
+        }
+
+
+
+    }
+    var BannerImageMediaPickerSingle = Model.ImageSize1;
+    if (BannerImageMediaPickerSingle != null)
+    {
+        BannerImage = BannerImageMediaPickerSingle.Url();
+    }
+    //articleComments 1274
+    var RootNode = Model.Root();
+    // var RootChildren = site.Children.Where(x => x.IsVisible());
+    IPublishedContent GetSingleCommentPage = Umbraco.Content(1297);
+
+    IList<IPublishedContent> AllMainCommentsList = null;
+    if (GetSingleCommentPage != null)
+        AllMainCommentsList = GetSingleCommentPage.Children.Where(x => (x.IsVisible() && x.HasValue("articlePageId") && x.Value<int>("articlePageId") == Model.Id)).ToList();
+
+
+    //string DatePosted = "";
+    //if (Model.HasValue("dateBlogPost"))
+    //{ DatePosted = Model.Value<DateTime>("dateBlogPost").ToString("MM/dd/yyyy hh:mm tt"); }
+    string FinalDate = "";
+    if (Model.HasValue("dateBlogPost"))
+    {
+        DateTime startDate = Model.Value<DateTime>("dateBlogPost");
+        int year = startDate.Year;
+        int month = startDate.Month;
+        int day = startDate.Day;
+
+        FinalDate = (string.Format("{0}/{1}/{2}", day, month, year));
+    }
+
+    var typedMultiNodeTreePickerSubBlogs = Model.Value<IEnumerable<IPublishedContent>>("selectSubBlogs");
+    string TitleTextSubBlog = "";//
+    if (Model.HasValue("titleForSubBlogs"))
+    { TitleTextSubBlog = Model.Value<string>("titleForSubBlogs"); }
+
+    var typedMultiNodeTreePickerMainBlogs = Model.Value<IEnumerable<IPublishedContent>>("selectMainBlogs");
+    string TitleTextMainBlog = "";//
+    if (Model.HasValue("titleForMainBlogs"))
+    { TitleTextMainBlog = Model.Value<string>("titleForMainBlogs"); }
+
+    var typedMultiNodeTreePickerRandomBlogs = Model.Value<IEnumerable<IPublishedContent>>("selectRandomBlogs");
+    string TitleTextRandomBlog = "";//
+    if (Model.HasValue("titleForRandomBlogs"))
+    { TitleTextRandomBlog = Model.Value<string>("titleForRandomBlogs"); }
+
+    
+     string VisaLinkCaption = "";
+    if (Model.HasValue("visaLinkCaption"))
+    { VisaLinkCaption = Model.Value<string>("visaLinkCaption"); }
+
+     string VisaLink = "";
+    if (Model.HasValue("visaLink"))
+    { VisaLink = Model.Value<string>("visaLink"); }
+
+      string Describtion = "";
+    if (Model.HasValue("describtion"))
+    { Describtion = Model.Value<string>("describtion"); }
+
+    //authorTitle
+}
+
+<link rel="stylesheet" href="~/css/blogs_three.min.css">
+<!-- START SECTION 1 bg-white  -->
+<section class="how-it-works rec-pro bg-white-2">
+    <div class="container" id="article-page">
+
+        <div class="row">
+            <div class="col-lg-8 col-md-6 col-sm-6 col-12 ">
+                <h1> @Model.Value("titleHeaderBlog")</h1>
+                <img src="@BannerImage" alt="home-1" class="w-100" />
+                <div class="profile_info profile_info_first my-4">
+                    <img class="profile_picture" src="@AuthorImage" alt="">
+                    @if (!string.IsNullOrEmpty(AuthorName) || FinalDate != null)
+                    { <h4 class="user_name">@AuthorName <br><span>@FinalDate</span> </h4> }
+                </div>
+
+                <div class="large_article section_one">
+                    <p>
+                        @Model.Value("blogArticle")
+                    </p>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-12">
+                        </div>
+                        @if (!string.IsNullOrEmpty(VisaLinkCaption) && !string.IsNullOrEmpty(VisaLink))
+                        {
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <a href="@VisaLink" class="btn btn-yellow get-quote">@VisaLinkCaption</a>
+                            </div>
+                        }
+                    </div>
+                    <div class="large_article bg-white p-3 mb-5">
+                        <div class="profile_info">
+                            <img class="profile_picture" src="@AuthorImage" alt="">
+                            @if (!string.IsNullOrEmpty(AuthorName) || FinalDate != null)
+                            {
+                                <h4 class="user_name">@AuthorName <br><span>@FinalDate</span>  </h4>
+                            }
+
+                        </div>
+                        <p class="mb-0">
+                            @Html.Raw(AuthorBioText)
+                        </p>
+                    </div>
+                </div>
+
+                <div class="send_message_form">
+
+                    <form id="@Model.Id" action="">
+
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="send_message_form_inputs col-lg-6 col-md-12 col-sm-12 col-12 mb-3">
+                                    <label class="label-home">Name</label>
+                                    <input type="text" id="mainformName" placeholder="Name" class="form-control input-lg">
+                                </div>
+
+                                <div class="send_message_form_inputs col-lg-6 col-md-12 col-sm-12 col-12 mb-3">
+                                    <label class="label-home">Email</label>
+                                    <input type="text" id="mainformEmail" placeholder="Email" class="form-control input-lg">
+                                </div>
+                                <div class="send_message_form_inputs col-lg-12 col-md-12 col-sm-12 col-12 mb-3">
+                                    <label class="label-home">Message</label>
+                                    <textarea placeholder="Message*" id="mainformMessage" class="form-control input-lg"></textarea>
+                                </div>
+
+                                <div class="send_message_form_inputs col-12">
+                                    <button type="button" class="btn btn-yellow get-quote" id="Mainget-quote">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                @if (AllMainCommentsList != null && AllMainCommentsList.Count > 0)
+                {
+                    <section class="gradient-custom" id="comments_section">
+                        <div class="container">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-md-12 col-lg-12 col-xl-12">
+
+
+                                    @foreach (var item in AllMainCommentsList)
+                                    {
+                                        
+                                        IList<IPublishedContent> AllReplyeComments = item.Children.ToList();
+
+                                        string Name = "";
+                                        if (item.HasValue("coName"))
+                                        { Name = item.Value<string>("coName"); }
+
+                                        string MessageText = "";
+                                        if (item.HasValue("message"))
+                                        { MessageText = item.Value<string>("message"); }
+
+                                        string CommentDatetext = "";
+                                        if (item.HasValue("commentDate"))
+                                        { CommentDatetext = item.Value<string>("commentDate"); }
+
+                                        <div class="card mb-4">
+                                            <div class="card-body p-4">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="d-flex flex-start">
+                                                            <img class="rounded-circle shadow-1-strong mr-3"
+                                                         src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(10).webp" alt="avatar" width="65"
+                                                         height="65" />
+                                                            <div class="flex-grow-1 flex-shrink-1">
+                                                                <div>
+                                                                    <div class="d-flex justify-content-between align-items-center">
+                                                                        <p class="mb-1">
+                                                                            @Name <span class="small"> - @CommentDatetext</span>
+                                                                        </p>
+                                                                        @if (AllMainCommentsList != null && AllMainCommentsList.Count < 6)
+                                                                        {
+                                                                            <a href="#" class="text-danger reply_toggler"><i class="fas fa-reply fa-xs"></i><span class="small"> reply</span></a>
+                                                                        }
+                                                                    </div>
+                                                                    <p class="small mb-0">
+                                                                        @Html.Raw(MessageText)
+                                                                    </p>
+                                                                </div>
+                                                                <div class="comment_reply_form bg-light p-4 rounded d-none" id="@item.Id">
+                                                                    <form action="">
+                                                                        <div class="container-fluid">
+                                                                            <div class="row">
+                                                                                <div class="send_message_form_inputs col-lg-6 col-md-12 col-sm-12 col-12 mb-3">
+                                                                                    <label class="label-home">Name</label>
+                                                                                    <input type="text" id="@(item.Id)replyNametext" placeholder="Name" class="form-control input-lg">
+                                                                                </div>
+
+                                                                                <div class="send_message_form_inputs col-lg-6 col-md-12 col-sm-12 col-12 mb-3">
+                                                                                    <label class="label-home">Email</label>
+                                                                                    <input type="text" id="@(item.Id)replyEmailtext" placeholder="Email" class="form-control input-lg">
+                                                                                </div>
+                                                                                <div class="send_message_form_inputs col-lg-12 col-md-12 col-sm-12 col-12 mb-3">
+                                                                                    <label class="label-home">Message</label>
+                                                                                    <textarea placeholder="Message*" id="@(item.Id)replyMessagetext" class="form-control input-lg"></textarea>
+                                                                                </div>
+
+                                                                                <div class="send_message_form_inputs col-12">
+                                                                                    <button type="button" class="btn btn-yellow get-quote" onclick="Submitform(@item.Id)">Send</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+
+                                                                @foreach (var repitem in AllReplyeComments)
+                                                                {
+
+                                                                    var ReplierName = repitem.CreatorName();
+                                                                @*    if (repitem.HasValue("coName"))
+                                                                    { ReplierName = repitem.Value<string>("coName"); }*@
+
+                                                                    string ReplyMessageText = "";
+                                                                    if (repitem.HasValue("message"))
+                                                                    { ReplyMessageText = repitem.Value<string>("message"); }
+
+                                                                    string ReplyCommentDatetext = "";
+                                                                    if (repitem.HasValue("commentDate"))
+                                                                    { ReplyCommentDatetext = repitem.Value<string>("commentDate"); }
+
+                                                                    <div class="d-flex flex-start mt-4">
+                                                                        <img class="rounded-circle shadow-1-strong mr-3"
+                                                                 src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(32).webp" alt="avatar"
+                                                                 width="65" height="65" />
+                                                                        <div class="flex-grow-1 flex-shrink-1">
+                                                                            <div>
+                                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                                    <p class="mb-1">
+                                                                                        Reply From @ReplierName <span class="small">- @ReplyCommentDatetext</span>
+                                                                                    </p>
+                                                                                </div>
+                                                                                <p class="small mb-0">
+                                                                                    @Html.Raw(ReplyMessageText)
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                }
+
+
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12 related_blogs">
+                @if (!string.IsNullOrEmpty(TitleTextSubBlog))
+                {<h2 class="blogs_title">@TitleTextSubBlog</h2>}
+                @if (typedMultiNodeTreePickerSubBlogs != null && typedMultiNodeTreePickerSubBlogs.Count() > 0)
+                { 
+                <div class="scroll_related_blogs">
+                    @foreach (var subitem in typedMultiNodeTreePickerSubBlogs)
+                        {
+
+                            string articleName = "";
+        if (subitem.HasValue("titleHeaderBlog"))
+                { articleName = subitem.Value<string>("titleHeaderBlog"); }
+
+              @*  string articleDescription = "";
+                if (subitem.HasValue("describtion"))
+                { articleDescription = subitem.Value<string>("describtion"); }
+
+                if (articleDescription != null && articleDescription.Length > 225)
+                {
+                    articleDescription = articleDescription.Substring(0, 225);
+                    articleDescription += "...";
+                    articleDescription = HttpUtility.HtmlDecode(articleDescription);
+                }*@
+
+                string ThumbnailImage = "";
+                var SubImageMediaPickerSingle = subitem.Value<IPublishedContent>("imageSize1");
+                if (SubImageMediaPickerSingle != null)
+                {
+                    ThumbnailImage = SubImageMediaPickerSingle.Url();
+                }
+
+                string SubAuthorName = "";
+                IPublishedContent SubtypedAuthorName = subitem.Value<IPublishedContent>("authorName");// Model.AuthorName;
+                if (SubtypedAuthorName != null)
+                { SubAuthorName = SubtypedAuthorName.Name; }
+
+                string CreatedDate = "";
+                if (subitem.HasValue("dateBlogPost"))
+    {
+        DateTime startDate = subitem.Value<DateTime>("dateBlogPost");
+        int year = startDate.Year;
+        int month = startDate.Month;
+        int day = startDate.Day;
+
+        CreatedDate = (string.Format("{0}/{1}/{2}", day, month, year));
+    }
+
+
+                        <div class="right_four_boxes">
+                         @if(!string.IsNullOrEmpty(ThumbnailImage))
+                        {<img src="@ThumbnailImage" alt="@articleName" class="img-responsive " />}s
+                        <div class="right_four_boxes_text">
+                            @if(!string.IsNullOrEmpty(articleName))
+                            {<h3> @articleName</h3>}
+                            <p>Posted by @SubAuthorName on @CreatedDate</p>
+                            <p class="read_more_link">
+                                <a href="@subitem.Url()">Read More <i class="fas fa-angle-double-right"></i></a>
+                            </p>
+                        </div>
+                    </div>
+                            
+                        }
+               
+                </div>
+                }
+
+                 @if (!string.IsNullOrEmpty(TitleTextMainBlog))
+                {<h2 class="blogs_title mt-4">@TitleTextMainBlog</h2>}
+                   @if (typedMultiNodeTreePickerMainBlogs != null && typedMultiNodeTreePickerMainBlogs.Count() > 0)
+                { 
+                <div class="scroll_related_blogs">
+                    @foreach (var mainitem in typedMultiNodeTreePickerMainBlogs)
+                        {
+
+                            string MainarticleName = "";
+        if (mainitem.HasValue("titleHeaderBlog"))
+                { MainarticleName = mainitem.Value<string>("titleHeaderBlog"); }
+
+              @*  string articleDescription = "";
+                if (mainitem.HasValue("describtion"))
+                { articleDescription = mainitem.Value<string>("describtion"); }
+
+                if (articleDescription != null && articleDescription.Length > 225)
+                {
+                    articleDescription = articleDescription.Substring(0, 225);
+                    articleDescription += "...";
+                    articleDescription = HttpUtility.HtmlDecode(articleDescription);
+                }*@
+
+                string MainThumbnailImage = "";
+                var MainImageMediaPickerSingle = mainitem.Value<IPublishedContent>("imageSize1");
+                if (MainImageMediaPickerSingle != null)
+                {
+                    MainThumbnailImage = MainImageMediaPickerSingle.Url();
+                }
+
+                string MainAuthorName = "";
+                IPublishedContent MaintypedAuthorName = mainitem.Value<IPublishedContent>("authorName");// Model.AuthorName;
+                if (MaintypedAuthorName != null)
+                { MainAuthorName = MaintypedAuthorName.Name; }
+
+                string MainCreatedDate = "";
+                if (mainitem.HasValue("dateBlogPost"))
+    {
+        DateTime startDate = mainitem.Value<DateTime>("dateBlogPost");
+        int year = startDate.Year;
+        int month = startDate.Month;
+        int day = startDate.Day;
+
+        MainCreatedDate = (string.Format("{0}/{1}/{2}", day, month, year));
+    }
+
+
+                        <div class="right_four_boxes">
+                         @if(!string.IsNullOrEmpty(MainThumbnailImage))
+                        {<img src="@MainThumbnailImage" alt="@MainarticleName" class="img-responsive " />}s
+                        <div class="right_four_boxes_text">
+                            @if(!string.IsNullOrEmpty(MainarticleName))
+                            {<h3> @MainarticleName</h3>}
+                            <p>Posted by @MainAuthorName on @MainCreatedDate</p>
+                            <p class="read_more_link">
+                                <a href="@mainitem.Url()">Read More <i class="fas fa-angle-double-right"></i></a>
+                            </p>
+                        </div>
+                    </div>
+                            
+                        }
+               
+                </div>
+                }
+
+                   @if (!string.IsNullOrEmpty(TitleTextRandomBlog))
+                {<h2 class="blogs_title mt-4">@TitleTextRandomBlog</h2>}
+                   @if (typedMultiNodeTreePickerRandomBlogs != null && typedMultiNodeTreePickerRandomBlogs.Count() > 0)
+                { 
+                <div class="scroll_related_blogs">
+                    @foreach (var ranitem in typedMultiNodeTreePickerRandomBlogs)
+                        {
+
+                            string RandomarticleName = "";
+        if (ranitem.HasValue("titleHeaderBlog"))
+                { RandomarticleName = ranitem.Value<string>("titleHeaderBlog"); }
+
+              @*  string articleDescription = "";
+                if (ranitem.HasValue("describtion"))
+                { articleDescription = ranitem.Value<string>("describtion"); }
+
+                if (articleDescription != null && articleDescription.Length > 225)
+                {
+                    articleDescription = articleDescription.Substring(0, 225);
+                    articleDescription += "...";
+                    articleDescription = HttpUtility.HtmlDecode(articleDescription);
+                }*@
+
+                string RandomThumbnailImage = "";
+                var RandomImageMediaPickerSingle = ranitem.Value<IPublishedContent>("imageSize1");
+                if (RandomImageMediaPickerSingle != null)
+                {
+                    RandomThumbnailImage = RandomImageMediaPickerSingle.Url();
+                }
+
+                string RandomAuthorName = "";
+                IPublishedContent RandomtypedAuthorName = ranitem.Value<IPublishedContent>("authorName");// Model.AuthorName;
+                if (RandomtypedAuthorName != null)
+                { RandomAuthorName = RandomtypedAuthorName.Name; }
+
+                string RandomtypedAuthorNameCreatedDate = "";
+                if (ranitem.HasValue("dateBlogPost"))
+    {
+        DateTime startDate = ranitem.Value<DateTime>("dateBlogPost");
+        int year = startDate.Year;
+        int month = startDate.Month;
+        int day = startDate.Day;
+
+        RandomtypedAuthorNameCreatedDate = (string.Format("{0}/{1}/{2}", day, month, year));
+    }
+
+                        <div class="right_four_boxes">
+                         @if(!string.IsNullOrEmpty(RandomThumbnailImage))
+                        {<img src="@RandomThumbnailImage" alt="@RandomarticleName" class="img-responsive " />}s
+                        <div class="right_four_boxes_text">
+                            @if(!string.IsNullOrEmpty(RandomarticleName))
+                            {<h3> @RandomarticleName</h3>}
+                            <p>Posted by @RandomAuthorName on @RandomtypedAuthorNameCreatedDate</p>
+                            <p class="read_more_link">
+                                <a href="@ranitem.Url()">Read More <i class="fas fa-angle-double-right"></i></a>
+                            </p>
+                        </div>
+                    </div>
+                            
+                        }
+               
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+
+</section>
+<!-- END SECTION 1 -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="~/js/blog_three.min.js"></script>
+<script>
+    $(document).ready(function() {
+
+
+        $(document).on('click', '#Mainget-quote', function() {
+            var ParentID = "@Model.Id";
+            var ChildID = 0;
+            if (MainValidationform()) {
+
+                var MainfrmName = $("#mainformName").val();
+                var MainfrmEmail = $("#mainformEmail").val();
+                var MainfrmMessage = $("#mainformMessage").val();
+
+                SubmitCommentsFormData(MainfrmName, MainfrmEmail, MainfrmMessage, ParentID, ChildID);
+            }
+
+        });
+    });
+
+
+    function Submitform(formId) {
+        var ParentID = "@Model.Id";
+        var ChildID = formId;
+        if (ReplyValidationform(formId)) {
+
+            var ReplyName = $("#" + formId + "replyNametext").val();
+            var ReplyEmail = $("#" + formId + "replyEmailtext").val();
+            var ReplyMessage = $("#" + formId + "replyMessagetext").val();
+            SubmitCommentsFormData(ReplyName, ReplyEmail, ReplyMessage, ParentID, ChildID);
+        }
+    }
+
+    function MainValidationform() {
+
+        if ($("#mainformName").val() == "") {
+            //$("#mainformName").parent().find("span").addClass("error");
+            //$("#mainformName").addClass("error");
+            $("#mainformName").focus();
+            return false;
+        }
+
+        if ($("#mainformEmail").val() == "" || !isValidEmailAddress($("#mainformEmail").val())) {
+            //$("#mainformEmail").parent().find("span").addClass("error");
+            //$("#mainformEmail").addClass("error");
+            $("#mainformEmail").focus();
+            return false;
+        }
+        if ($("#mainformEmail").val() != "") {
+
+            var Email = $("#mainformEmail").val();
+            if (!isValidEmailAddress(Email)) {
+                //$("#mainformEmail").parent().find("span").addClass("error");
+                //$("#mainformEmail").addClass("error");
+                $("#mainformEmail").focus();
+                return false;
+            }
+        }
+
+        if ($("#mainformMessage").val() == "") {
+            //$("#mainformMessage").parent().find("span").addClass("error");
+            //$("#mainformMessage").addClass("error");
+            $("#mainformMessage").focus();
+            return false;
+        }
+
+        return true;
+
+    }
+
+
+    function ReplyValidationform(formId) {
+
+        if ($("#" + formId + "replyNametext").val() == "") {
+            //$("#mainformName").parent().find("span").addClass("error");
+            //$("#mainformName").addClass("error");
+            $("#" + formId + "replyNametext").focus();
+            return false;
+        }
+
+        if ($("#" + formId + "replyEmailtext").val() == "" || !isValidEmailAddress($("#" + formId + "replyEmailtext").val())) {
+            //$("#mainformEmail").parent().find("span").addClass("error");
+            //$("#mainformEmail").addClass("error");
+            $("#" + formId + "replyEmailtext").focus();
+            return false;
+        }
+        if ($("#" + formId + "replyEmailtext").val() != "") {
+
+            var Email = $("#" + formId + "replyEmailtext").val();
+            if (!isValidEmailAddress(Email)) {
+                //$("#mainformEmail").parent().find("span").addClass("error");
+                //$("#mainformEmail").addClass("error");
+                $("#" + formId + "replyEmailtext").focus();
+                return false;
+            }
+        }
+
+        if ($("#" + formId + "replyMessagetext").val() == "") {
+            //$("#mainformMessage").parent().find("span").addClass("error");
+            //$("#mainformMessage").addClass("error");
+            $("#" + formId + "replyMessagetext").focus();
+            return false;
+        }
+
+        return true;
+    }
+
+    function isValidEmailAddress(emailAddress) {
+        var pattern = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+        return pattern.test(emailAddress);
+    };
+
+    function SubmitCommentsFormData(Name, Email, Message, ParentID, ChildID) {
+
+        var requestData = { pName: Name, pEmail: Email, pMessage: Message, pParentID: ParentID, pChildID: ChildID }
+        var urls = "/Umbraco/Surface/Comments/SubmitComments";
+
+        $.ajax({
+            type: "GET",
+            url: urls + "/" + requestData,
+            data: requestData,
+            dataType: 'JSON',
+            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+
+            success: function(response) {
+
+                if (response == "1") {
+                    location.reload(true);
+                }
+            },
+            error: function() {
+                alert("error");
+            }
+        })
+    }
+
+</script>
+

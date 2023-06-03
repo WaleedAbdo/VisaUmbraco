@@ -1,0 +1,165 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Web.Common.Models
+@using Umbraco.Cms.Web.Common.Security
+@using Umbraco.Cms.Web.Website.Controllers
+@using Umbraco.Cms.Core.Services
+@using Umbraco.Extensions
+@inject IMemberExternalLoginProviders memberExternalLoginProviders
+@inject ITwoFactorLoginService twoFactorLoginService
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+         var loginProviders = await memberExternalLoginProviders.GetMemberProvidersAsync();
+    var externalSignInError = ViewData.GetExternalSignInProviderErrors();
+
+     var isLoggedIn = Context.User?.Identity?.IsAuthenticated ?? false;
+}
+
+ <!-- START SECTION 1 bg-white  -->
+    <section class="about-box">
+      <div class="container-fluid data">
+        <div class="row">
+          <div class="col-12">
+            <div class="row shop-tracking-status justify-content-center">
+              <div class="col-12">
+                <div class="well">
+                  <div class="order-status" >
+                    <div class="order-status-timeline">
+                      <!-- class names: c0 c1 c2 c3  c4 and c5  -->
+                      <div class="order-status-timeline-completion c6"></div>
+                    </div>
+
+                    <div class="image-order-status image-order-status-one active img-circle">
+                      <span class="status">PERSONAL & HOME DETAILS</span>
+                    </div>
+                    <div class="image-order-status image-order-status-two active hidden_div img-circle">
+                      <span class="status">FATHER <br />
+                        DETAILS</span>
+                    </div>
+                    <div class="image-order-status image-order-status-three active  hidden_div img-circle">
+                      <span class="status">PASSPORT <br />
+                        DETAILS</span>
+                    </div>
+                    <div class="image-order-status image-order-status-four active img-circle">
+                      <span class="status">EMPLOYMENT <br />
+                        DETAILS</span>
+                    </div>
+                    <div class="image-order-status image-order-status-five active hidden_div img-circle">
+                      <span class="status">FATHER <br />
+                        DETAILS</span>
+                    </div>
+                    <div class="image-order-status image-order-status-six active hidden_div img-circle">
+                      <span class="status">MOTHER <br />
+                        DETAILS</span>
+                    </div>
+                    <div class="image-order-status image-order-status-seven active img-circle">
+                      <span class="status">
+                        PAYMENT <br />
+                        MATHOD</span>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="Add_select">
+                      <h3 class="form_title text-white text-center mb-5">Total Cost 1000 EGP </h3>
+                      
+                      <div class="d-flex justify-content-center">
+                        <input class="trigger_input" type="radio" id="Online" name="Payment" value="Online"
+                          onclick="show1()" />
+                        <label class="Online_label" for="Online">Online Payment</label>
+
+                        <input class="trigger_input" type="radio" id="Cash" name="Payment" value="Cash"
+                          onclick="show2()" />
+                        <label class="Cash_label" for="Cash">Cash On Delivery</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12 show1_form" style="display: none;">
+                   
+                      <div class="">
+                        <div class="text-center bg-white justify-content-center">
+                            <img src="~/images/new/mastercard.png" alt="" srcset="" />
+                            <img src="~/images/new/visa.png" alt="" srcset=""  />
+                          </div>
+                        </div>
+                        <div class="description bg-info p-5">
+                          <h2 class="text-white text-center">Description</h2>
+                          <p class="text-white text-center">
+                            United States provides USA visa online services as
+                            Electronic System for Travel Authorization
+                            (ESTA) is available for foreign citizen of Visa
+                            Waiver Program VWP countries. USA ESTA visa
+                            process can be completed online, and it's very
+                            convenient. After you apply for US visa online
+                          </p>
+                        </div>
+                      </div>
+                    
+                  </div>
+
+                  <div class="col-12 show2_form" style="display: none;">
+                    <div class="row Payment_methods">
+                      <div class="col-lg-3 col-md-3 col-12">
+                        <div class="rect_tri disabled">
+                          <h3><img class="img-1" src="~/images/new/vodafone.png" alt="" /> Vodafone Cash</h3>
+                          
+                        </div>
+                        <div class="rect_tri_content">
+                          <p></p>
+                        </div>
+                      </div>
+                      <div class="col-lg-3 col-md-3 col-12">
+                        <div class="rect_tri">
+                          <h3> <img  src="~/images/new/fawry_icon.png" alt="" /> Fawry</h3>
+                         
+
+                          <img  src="~/images/new/fawry.png" alt="" />
+                        </div>
+                        <div class="rect_tri_content">
+                          <p class="text-center">
+                            United States provides USA visa online services as
+                            Electronic System for Travel Authorization (ESTA)
+                            is available for foreign citizen of Visa Waiver
+                            Program VWP countries. USA ESTA visa process can
+                            be completed online, and it's very convenient.
+                            After you apply for US visa online
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-lg-3 col-md-3 col-12">
+                        <div class="rect_tri disabled">
+                          <h3>OPTION THREE</h3>
+                        </div>
+                        <div class="rect_tri_content">
+                          <p></p>
+                        </div>
+                      </div>
+                      <div class="col-lg-3 col-md-3 col-12">
+                        <div class="rect_tri disabled">
+                          <h3>OPTION FOUR</h3>
+                        </div>
+                        <div class="rect_tri_content">
+                          <p></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+            <div class="col-12">
+              <div class="row justify-content-center">
+                <div class="col-lg-10 col-md-10 col-12 my-3 d-flex">
+                  <a id="frm5cancel" class="page_buttons bg-dark" href="javascript:;">Cancel</a>
+                  <a id="frm5back" class="page_buttons bg-dark ml-auto" href="javascript:;">Back</a>
+                  <a id="frm5next" class="page_buttons" href="javascript:;">Next</a>
+                  <a id="frm5save" class="page_buttons" href="javascript:;">Save</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- END SECTION 1 -->

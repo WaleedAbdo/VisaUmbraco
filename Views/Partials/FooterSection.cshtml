@@ -1,0 +1,194 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    //IPublishedContent HomeNode = Umbraco.AssignedContentItem.AncestorOrSelf(1).DescendantsOrSelf().Where(x => x.ContentType.Alias == "home").FirstOrDefault(); //Model.Root();//Model.Root().Siblings().FirstOrDefault(x => x.ContentType.Alias == "home");
+    IPublishedContent HomeNode = Umbraco.Content(1163);                                                                                                                                // HomeNode.DescendantsOrSelf().Where(x => x.ContentType.Alias == "blog").FirstOrDefault();
+    string LeftlogoImage = "", LeftLogoimageAlt = "", Leftlogodescription = "",OurServiceHeading="",AboutUsTitle="",AboutUsLinkUrl="",ContactUsTitle="",ContactUsLinkUrl="";
+    string TelephoneText = "", EmailText = "",FaceBookLInkURL="",LinkedInUrl="",FacebookIcon="",LinkedInIcon="",InstagramUrl="";
+    IEnumerable<IPublishedElement> SelectionServicesItems = null;
+   IEnumerable<IPublishedElement> FooterThirdColumnLinksItems = null;
+    if (HomeNode != null)
+    {
+        var typecontentMediapicker = HomeNode.Value<IPublishedContent>("leftLogoImage");
+        if (typecontentMediapicker != null)
+        { LeftlogoImage = typecontentMediapicker.Url(); }
+
+     
+        if (HomeNode.HasValue("leftLogoImageAlt"))
+        { LeftLogoimageAlt = HomeNode.Value<string>("leftLogoImageAlt"); }
+
+   
+        if (HomeNode.HasValue("leftImageDescription"))
+        { Leftlogodescription = HomeNode.Value<string>("leftImageDescription"); }
+
+        if (HomeNode.HasValue("ourServicesHeading"))
+        { OurServiceHeading = HomeNode.Value<string>("ourServicesHeading"); }
+
+          if (HomeNode.HasValue("aboutUsTitle"))
+        { AboutUsTitle = HomeNode.Value<string>("aboutUsTitle"); }
+
+         var typecontentAboutUsMediapicker = HomeNode.Value<IPublishedContent>("aboutUsLink");
+        if (typecontentAboutUsMediapicker != null)
+        { AboutUsLinkUrl = typecontentAboutUsMediapicker.Url(); }
+
+          if (HomeNode.HasValue("contactUsTitle"))
+        { ContactUsTitle = HomeNode.Value<string>("contactUsTitle"); }
+
+              var typecontentContactUsMediapicker = HomeNode.Value<IPublishedContent>("contactUsLink");
+        if (typecontentContactUsMediapicker != null)
+        { ContactUsLinkUrl = typecontentContactUsMediapicker.Url(); }
+
+   
+        SelectionServicesItems = HomeNode.Value<IEnumerable<IPublishedElement>>("servicesItem");
+
+       FooterThirdColumnLinksItems = HomeNode.Value<IEnumerable<IPublishedElement>>("footerThirdColumnLinks");
+        
+
+           if (HomeNode.HasValue("telephone"))
+        { TelephoneText = HomeNode.Value<string>("telephone"); }
+
+          if (HomeNode.HasValue("email"))
+        { EmailText = HomeNode.Value<string>("email"); }
+
+          var typecontentFacebookMediapicker = HomeNode.Value<IPublishedContent>("facebookIcon");
+        if (typecontentFacebookMediapicker != null)
+        { FacebookIcon = typecontentFacebookMediapicker.Url(); }
+
+               var typecontentLinkedInMediapicker = HomeNode.Value<IPublishedContent>("linkedInIcon");
+        if (typecontentLinkedInMediapicker != null)
+        { LinkedInIcon = typecontentLinkedInMediapicker.Url(); }
+        //
+           if (HomeNode.HasValue("facebookLink"))
+        { FaceBookLInkURL = HomeNode.Value<string>("facebookLink"); }
+
+          if (HomeNode.HasValue("linkedInUrl"))
+        { LinkedInUrl = HomeNode.Value<string>("linkedInUrl"); }
+
+
+          if (HomeNode.HasValue("instagramUrl"))
+        { InstagramUrl = HomeNode.Value<string>("instagramUrl"); }
+
+    }
+
+}
+<footer class="first-footer rec-pro">
+    <div class="top-footer">
+        <div class="container-fluid">
+            <div class="row">
+                @if (!string.IsNullOrEmpty(LeftlogoImage) || !string.IsNullOrEmpty(Leftlogodescription))
+                {
+                    <div class="col-lg-3 col-md-6">
+                        <div class="netabout">
+                            @if (LeftlogoImage != null)
+                            {
+                                <a href="index.html" class="logo">
+                                    <img src="@LeftlogoImage" alt="@LeftLogoimageAlt">
+                                </a>
+                            }
+                            @Html.Raw(Leftlogodescription)
+                        </div>
+                    </div>
+                }
+                @if (SelectionServicesItems != null && SelectionServicesItems.Count() > 0)
+                {
+                    <div class="col-lg-3 col-md-6">
+                        <div class="navigation">
+                            @if (!string.IsNullOrEmpty(OurServiceHeading))
+                            {
+                                <h3>@OurServiceHeading</h3>
+                            }
+                            <div class="nav-footer">
+                                <ul>
+                                    @foreach (var seritem in SelectionServicesItems)
+                                    {
+                                        string ServiceTitle = "";
+                                        if (seritem.HasValue("title"))
+                                        { ServiceTitle = seritem.Value<string>("title"); }
+
+                                        string ServiceLinkUrl = "javascript:;";
+                                        var typeContentpicker = seritem.Value<IPublishedContent>("linkUrl");
+                                        if (typeContentpicker != null)
+                                        { ServiceLinkUrl = typeContentpicker.Url(); }
+
+
+                                        <li><a href="@ServiceLinkUrl">@ServiceTitle</a></li>
+                                    }
+
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (FooterThirdColumnLinksItems != null && FooterThirdColumnLinksItems.Count() > 0)
+                {
+                    <div class="col-lg-3 col-md-6">
+                        <div class="widget">
+                            @foreach (var colitem in FooterThirdColumnLinksItems)
+                            {
+                                string Title = "";
+                                if (colitem.HasValue("title"))
+                                { Title = colitem.Value<string>("title"); }
+
+                                string ThirdColLinkUrl = "javascript:;";
+                                var typeThirdContentpicker = colitem.Value<IPublishedContent>("linkUrl");
+                                if (typeThirdContentpicker != null)
+                                { ThirdColLinkUrl = typeThirdContentpicker.Url(); }
+
+                                <h3><a href="@ThirdColLinkUrl">@Title </a></h3>
+                            }
+
+                        </div>
+                    </div>
+                }
+                <div class="col-lg-3 col-md-6">
+                    @if ((!string.IsNullOrEmpty(AboutUsTitle) && !string.IsNullOrEmpty(AboutUsLinkUrl)) || (!string.IsNullOrEmpty(ContactUsTitle) && !string.IsNullOrEmpty(ContactUsLinkUrl)))
+                    {
+                        <div class="newsletters">
+                            @if(!string.IsNullOrEmpty(AboutUsTitle) && !string.IsNullOrEmpty(AboutUsLinkUrl))
+                            {<h3><a href="@AboutUsLinkUrl">@AboutUsTitle</a></h3>}
+                            @if (!string.IsNullOrEmpty(ContactUsTitle) && !string.IsNullOrEmpty(ContactUsLinkUrl))
+                            { <h3><a href="@ContactUsLinkUrl">@ContactUsTitle</a></h3>}
+                        </div>
+                    }
+                    <div class="contactus">
+                        <ul>
+                            @if (!string.IsNullOrEmpty(TelephoneText))
+                            {
+                                <li>
+                                    <div class="info">
+                                        <i class="fa fa-phone" aria-hidden="true"></i>
+                                        <p class="in-p">@TelephoneText</p>
+                                    </div>
+                                </li>
+                            }
+                             @if (!string.IsNullOrEmpty(EmailText))
+                            {
+                                <li>
+                                    <div class="info">
+                                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                                        <p class="in-p ti">@EmailText</p>
+                                    </div>
+                                </li>
+                            }
+                            <li>
+                                <a href="#"><i class="fab fa-instagram-square"></i></a>
+                                <a href="@FaceBookLInkURL" target="_blank"><i class="fab fa-facebook" aria-hidden="true"></i></a>
+                                <a href="@LinkedInIcon" target="_blank"><i class="fab fa-linkedin" aria-hidden="true"></i></a>
+                                <a href="@InstagramUrl" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="second-footer rec-pro text-center">
+        <div class="">
+            <p>Copyright OrbScope @DateTime.Now.Year</p>
+        </div>
+    </div>
+</footer>
+
+<a href="#wrapper" class="go-up">
+    <img src="~/images/new/whatsapp.webp" width="50px" alt="whatsapp">
+</a>

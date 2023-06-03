@@ -1,0 +1,839 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Web.Common.Models
+@using Umbraco.Cms.Web.Common.Security
+@using Umbraco.Cms.Web.Website.Controllers
+@using Umbraco.Cms.Core.Services
+@using Umbraco.Extensions
+@inject IMemberExternalLoginProviders memberExternalLoginProviders
+@inject ITwoFactorLoginService twoFactorLoginService
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var loginProviders = await memberExternalLoginProviders.GetMemberProvidersAsync();
+    var externalSignInError = ViewData.GetExternalSignInProviderErrors();
+
+    var isLoggedIn = Context.User?.Identity?.IsAuthenticated ?? false;
+}
+@{
+    Layout = "master.cshtml";
+}
+<link rel="stylesheet" href="~/css/forms.min.css">
+
+@if (!isLoggedIn)
+{
+    <!-- STAR HEADER SEARCH -->
+    <section id="hero-area" class="parallax-searchs header-about" data-stellar-background-ratio="0.5">
+        <div class="hero-main">
+            <div class="container" data-aos="zoom-in">
+                <div class="row box-header">
+                    <div class="col-12">
+                        <div class="hero-inner">
+                            <!-- Welcome Text -->
+                            <div class="welcome-text">
+                                <h1 class="title-desc-blog">
+                                    <span>
+                                        Everything you need to know about <br>
+                                        the digital trends and initiatives that are transforming <br>
+                                        commerce and uplifting the communities we serve.
+                                    </span>
+                                </h1>
+                            </div>
+                            <!--/ End Welcome Text -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END HEADER SEARCH -->
+
+    <div id="frmPersonalInfo">
+        @await Html.PartialAsync("~/Views/Partials/VisaApp/_PersonalInformation.cshtml")
+    </div>
+
+    <div id="frmvisarequirment" style="display:none;">
+        @await Html.PartialAsync("~/Views/Partials/VisaApp/_VisaRequirment.cshtml")
+    </div>
+
+    <div id="frmAddservices" style="display:none;">
+        @await Html.PartialAsync("~/Views/Partials/VisaApp/_AddServices.cshtml")
+    </div>
+
+    <div id="frmAddpayment" style="display:none;">
+        @await Html.PartialAsync("~/Views/Partials/VisaApp/_Addpayment.cshtml")
+    </div>
+
+    <input type="hidden" id="userId" name="userId" value="">
+
+    <script src="~/js/form_5.min.js"></script>
+    <script src="~/js/form_1.min.js"></script>
+    <script src="~/js/form_3.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+
+
+            $(".visatype").text(localStorage.getItem('VisaTypes'));
+            $(".totalfee").text(localStorage.getItem('TotalFee'));
+            $(".processing").text();
+            $(".destinationcountry").text(localStorage.getItem('DestinationName'));
+            $("#frm1btnnext").css("display", "none");
+            $(".totalcost").text(localStorage.getItem('TotalFee'));
+
+            //VisaRequirmentVM
+            var VisaRequirmentVM = [], objVisaRequirmentVM = {};
+
+            $('.table tr > td').each(function(index, td) {
+
+                if ($(this).hasClass("text-right")) {
+
+                    if ($(this).hasClass("appname")) { objVisaRequirmentVM.ApplicantName = $(this).text(); }
+                    if ($(this).hasClass("destinationcountry")) { objVisaRequirmentVM.DestinationCountry = $(this).text(); }
+                    if ($(this).hasClass("visatype")) { objVisaRequirmentVM.VisaType = $(this).text(); }
+                    if ($(this).hasClass("processing")) { objVisaRequirmentVM.Processing = $(this).text(); }
+                    if ($(this).hasClass("totalfee")) { objVisaRequirmentVM.TotalFees = $(this).text(); }
+                }
+
+            });
+            VisaRequirmentVM.push(objVisaRequirmentVM);
+
+
+            if ((localStorage.getItem('langId') != null && localStorage.getItem('langId') != "" && localStorage.getItem('langId') != "undefined") && (localStorage.getItem('NationalID') != null && localStorage.getItem('NationalID') != "" && localStorage.getItem('NationalID') != "undefined")
+                && (localStorage.getItem('LivingIN') != null && localStorage.getItem('LivingIN') != "" && localStorage.getItem('LivingIN') != "undefined") && (localStorage.getItem('CityID') != null && localStorage.getItem('CityID') != "" && localStorage.getItem('CityID') != "undefined")
+                && (localStorage.getItem('DestinationID') != null && localStorage.getItem('DestinationID') != "" && localStorage.getItem('DestinationID') != "undefined") && (localStorage.getItem('TravelingID') != null && localStorage.getItem('TravelingID') != "" && localStorage.getItem('TravelingID') != "undefined")) {
+
+                var langId = localStorage.getItem('langId');
+                var RegionId = localStorage.getItem('LivingIN');
+                var RegionName = localStorage.getItem('LivingINName');
+                var CityId = localStorage.getItem('CityID');
+                var CityName = localStorage.getItem('CityName');
+                var DestinationID = localStorage.getItem('DestinationID');
+                var DestinationName = localStorage.getItem('DestinationName');
+                var NationalID = localStorage.getItem('NationalID');
+                var NationalityName = localStorage.getItem('NationalName');
+                var TravelingID = localStorage.getItem('TravelingID');
+                var TravelingName = localStorage.getItem('TravelingName');
+
+                CheckVisaFormRequirments(langId, RegionId, CityId, DestinationID, NationalID, TravelingID);
+            }
+
+            var langId = 1;
+            GetNationalityByLanguageIDForFormDATA(langId);
+
+            $(document).on('click', '#frm1btnnext', function() {
+                $("#frmPersonalInfo").css("display", "none");
+                $("#frmvisarequirment").css("display", "block");
+                //buttton hidden
+                $("#frm3next").css("display", "none");
+            });
+
+            $(document).on('click', '#frm3back', function() {
+                $("#frmPersonalInfo").css("display", "block");
+                $("#frmvisarequirment").css("display", "none");
+                //
+                $("#frm1btnnext").css("display", "none");
+                $("#frm1btnsave").css("display", "block");
+            });
+
+            $(document).on('click', '#frm3next', function() {
+                $("#frmvisarequirment").css("display", "none");
+                $("#frmAddservices").css("display", "block");
+            });
+
+
+            $(document).on('click', '#frm4next', function() {
+                $("#frmAddservices").css("display", "none");
+                $("#frmAddpayment").css("display", "block");
+            });
+
+            $(document).on('click', '#frm4back', function() {
+                $("#frmAddservices").css("display", "block");
+                $("#frmAddpayment").css("display", "none");
+                //
+                $("#frm3next").css("display", "none");
+                $("#frm3save").css("display", "block");
+            });
+
+            $(document).on('click', '#frm1btnsave', function() {
+
+                if (Form1Validation()) {
+                    var firstName = $("#frm1fname").val();
+                    var middleName = $("#frm1mname").val();
+                    var surname = $("#frm1sname").val();
+                    var otherNames = $("#frm1othname").val();
+                    var gender = $('input[name="gender"]:checked').val();
+                    var currentNationality = $("#CurrentNationality option:selected").text();
+                    var placeOfBirth = $("#frm1PlaceOfbirth").val();
+                    var maritalStatus = $("#frm1Maritalstatus option:selected").text();
+                    var previousNationality = $("#PreviousNationality option:selected").text();
+                    var nationalIdentityNumber = $("#frm1NIN").val();
+                    var mobilePhoneNumber = $("#phone").val();
+                    var highestDegree = $("#frm1highestdegree").val();
+                    var passportNumber = $("#frm1passportnumber").val();
+                    var passportdate = $("#Passportdateyear option:selected").text() + "-" + $("#Passportdatemonth option:selected").text() + "-" + $("#Passportdateday option:selected").text();
+                    var passportexpiredate = $("#Passportexpiredateyear option:selected").text() + "-" + $("#Passportexpiredatemonth option:selected").text() + "-" + $("#Passportexpiredateday option:selected").text();
+                    var isApplicantMinor = $('input[name="applicaintminor"]:checked').val();
+                    var invitedbyFamilyOrFriend = $('input[name="Invitedbyfamily"]:checked').val();
+                    var fromDate = "";
+                    var invitedbyCompany = $('input[name="Invitedbycompany"]:checked').val();
+                    var houseNumber = $("#frm1HouseNumber").val();
+                    var areaName = $("#frm1AreaName").val();
+                    var postcode = $("#frm1ZipCode").val();
+                    var streetName = $("#frm1StreetNo").val();
+                    var city = $("#frm1City").val();
+                    var buildingName = $("#frm1buildingName").val();
+
+                    var UserID = $("#userId").val();
+                    var PersonalAndHomeDetails = {
+                        UserID: UserID,
+                        UserName: "@Context?.User?.Identity?.Name",
+                        FirstName: firstName,
+                        MiddleName: middleName,
+                        Surname: surname,
+                        OtherNames: otherNames,
+                        Gender: gender,
+                        CurrentNationality: currentNationality,
+                        PlaceOfBirth: placeOfBirth,
+                        MaritalStatus: maritalStatus,
+                        DateOfBirth: "",
+                        previousNationality: previousNationality,
+                        nationalIdentityNumber: nationalIdentityNumber,
+                        MobilePhoneNumber: mobilePhoneNumber,
+                        HighestDegree: highestDegree,
+                        PassportNumber: passportNumber,
+                        Passportdate: passportdate,
+                        Passportexpiredate: passportexpiredate,
+                        IsApplicantMinor: isApplicantMinor,
+                        InvitedbyFamilyOrFriend: invitedbyFamilyOrFriend,
+                        FromDate: fromDate,
+                        InvitedbyCompany: invitedbyCompany,
+                        HouseNumber: houseNumber,
+                        AreaName: areaName,
+                        Postcode: postcode,
+                        StreetName: streetName,
+                        City: city,
+                        BuildingName: buildingName
+
+                    }
+
+                    var urls = "/Umbraco/Surface/VisaApp/SubmitVisaAppDataOfPersonalInformation";
+
+                    jQuery.ajax({
+                        type: 'GET',
+                        url: urls,
+                        data: PersonalAndHomeDetails,
+                        dataType: 'JSON',
+                        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                        success: function(Result) {
+
+                            if (Result != null) {
+
+                                $("#userId").val(Result);
+                                $("#frm1btnsave").css("display", "none");
+                                $("#frm1btnnext").css("display", "block");
+
+                            }
+
+
+                        },
+                        error: function() {
+                            alert("Error occurs");
+                        }
+                    });
+
+
+                }
+
+            });
+
+            $("#frm3next").css("display", "none");
+            $(document).on('click', '#frm3save', function() {
+
+                var UserID = $("#userId").val();
+
+                var UserID = $("#userId").val();
+                var formData = new FormData();
+                formData.append("visarequirment", JSON.stringify(VisaRequirmentVM));
+                formData.append("UserID", UserID);
+
+                //var requestData = {VisaRequirmentVM:itemDetails,UserID:UserID}
+                //  var urls = "/Umbraco/Surface/VisaApp/SubmitVisaVisaRequirment";
+
+                jQuery.ajax({
+                    type: "POST",
+                    url: "/Umbraco/api/EmailSending/SubmitVisaVisaRequirment",
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(Result) {
+
+                        if (Result != null) {
+
+                            $("#frm3save").css("display", "none");
+                            $("#frm3next").css("display", "block");
+
+                        }
+
+
+                    },
+                    error: function() {
+                        alert("Error occurs");
+                    }
+                });
+
+
+            });
+
+            $(document).on('change', '#frm3nationality', function() {
+
+
+                var $Nationalityid = $(this).find(":selected").text();
+                if ($Nationalityid == null || typeof ($Nationalityid) == "undefined" || $Nationalityid == "select") { $Nationalityid = localStorage.getItem('NationalID'); }
+                else { $Nationalityid = $(this).find(":selected").val(); }
+
+                var $TravelTo = $("#frm3TravelingTo").find(":selected").text();
+                if ($TravelTo == null || typeof ($TravelTo) == "undefined" || $TravelTo == "select") { $TravelTo = localStorage.getItem('DestinationID'); }
+                else { $TravelTo = $("#frm3TravelingTo").find(":selected").val(); }
+
+                var $PurposeOfTravel = $("#frm3PurposeOfTravel").find(":selected").text();
+                if ($PurposeOfTravel == null || typeof ($PurposeOfTravel) == "undefined" || $PurposeOfTravel == "select") { $PurposeOfTravel = localStorage.getItem('TravelingID'); }
+                else { $PurposeOfTravel = $("#frm3PurposeOfTravel").find(":selected").val(); }
+
+                var langId = localStorage.getItem('langId');
+                var RegionId = localStorage.getItem('LivingIN');
+                var CityId = localStorage.getItem('CityID');
+                var DestinationID = "";//$TravelTo localStorage.getItem('DestinationID');
+                if ($TravelTo != null && $TravelTo != "") { DestinationID = $TravelTo; }
+                else {
+                    DestinationID = localStorage.getItem('DestinationID');
+                }
+
+                var NationalID = "";//localStorage.getItem('NationalID');
+                if ($Nationalityid != null && $Nationalityid != "") { NationalID = $Nationalityid; }
+                else {
+                    NationalID = localStorage.getItem('NationalID');
+                }
+
+                var TravelingID = "";//$PurposeOfTravel localStorage.getItem('TravelingID');
+                if ($PurposeOfTravel != null && $PurposeOfTravel != "") { TravelingID = $PurposeOfTravel; }
+                else {
+                    TravelingID = localStorage.getItem('TravelingID');
+                }
+
+                CheckVisaFormRequirments(langId, RegionId, CityId, DestinationID, NationalID, TravelingID);
+
+            });
+
+            $(document).on('change', '#frm3TravelingTo', function() {
+
+                var $Nationalityid = $("#frm3nationality").find(":selected").text();
+                if ($Nationalityid == null || typeof ($Nationalityid) == "undefined" || $Nationalityid == "select") { $Nationalityid = localStorage.getItem('NationalID'); }
+                else { $Nationalityid = $("#frm3nationality").find(":selected").val(); }
+
+                var $TravelTo = $(this).find(":selected").text();
+                if ($TravelTo == null || typeof ($TravelTo) == "undefined" || $TravelTo == "select") { $TravelTo = localStorage.getItem('DestinationID'); }
+                else { $TravelTo = $(this).find(":selected").val(); }
+
+                var $PurposeOfTravel = $("#frm3PurposeOfTravel").find(":selected").text();
+                if ($PurposeOfTravel == null || typeof ($PurposeOfTravel) == "undefined" || $PurposeOfTravel == "select") { $PurposeOfTravel = localStorage.getItem('TravelingID'); }
+                else { $PurposeOfTravel = $("#frm3PurposeOfTravel").find(":selected").val(); }
+
+                var langId = localStorage.getItem('langId');
+                var RegionId = localStorage.getItem('LivingIN');
+                var CityId = localStorage.getItem('CityID');
+                var DestinationID = "";//$TravelTo localStorage.getItem('DestinationID');
+                if ($TravelTo != null && $TravelTo != "") { DestinationID = $TravelTo; }
+                else {
+                    DestinationID = localStorage.getItem('DestinationID');
+                }
+
+                var NationalID = "";//localStorage.getItem('NationalID');
+                if ($Nationalityid != null && $Nationalityid != "") { NationalID = $Nationalityid; }
+                else {
+                    NationalID = localStorage.getItem('NationalID');
+                }
+
+                var TravelingID = "";//$PurposeOfTravel localStorage.getItem('TravelingID');
+                if ($PurposeOfTravel != null && $PurposeOfTravel != "") { TravelingID = $PurposeOfTravel; }
+                else {
+                    TravelingID = localStorage.getItem('TravelingID');
+                }
+
+                CheckVisaFormRequirments(langId, RegionId, CityId, DestinationID, NationalID, TravelingID);
+
+            });
+
+            $(document).on('change', '#frm3PurposeOfTravel', function() {
+
+                var $Nationalityid = $("#frm3nationality").find(":selected").text();
+                if ($Nationalityid == null || typeof ($Nationalityid) == "undefined" || $Nationalityid == "select") { return false; }
+                else { $Nationalityid = $("#frm3nationality").find(":selected").val(); }
+
+                var $TravelTo = $("#frm3TravelingTo").find(":selected").text();
+                if ($TravelTo == null || typeof ($TravelTo) == "undefined" || $TravelTo == "select") { return false; }
+                else { $TravelTo = $("#frm3TravelingTo").find(":selected").val(); }
+
+                var $PurposeOfTravel = $(this).find(":selected").text();
+                if ($PurposeOfTravel == null || typeof ($PurposeOfTravel) == "undefined" || $PurposeOfTravel == "select") { return false; }
+                else { $PurposeOfTravel = $(this).find(":selected").val(); }
+
+                var langId = localStorage.getItem('langId');
+                var RegionId = localStorage.getItem('LivingIN');
+                var CityId = localStorage.getItem('CityID');
+                var DestinationID = "";//$TravelTo localStorage.getItem('DestinationID');
+                if ($TravelTo != null && $TravelTo != "") { DestinationID = $TravelTo; }
+                else {
+                    DestinationID = localStorage.getItem('DestinationID');
+                }
+
+                var NationalID = "";//localStorage.getItem('NationalID');
+                if ($Nationalityid != null && $Nationalityid != "") { NationalID = $Nationalityid; }
+                else {
+                    NationalID = localStorage.getItem('NationalID');
+                }
+
+                var TravelingID = "";//$PurposeOfTravel localStorage.getItem('TravelingID');
+                if ($PurposeOfTravel != null && $PurposeOfTravel != "") { TravelingID = $PurposeOfTravel; }
+                else {
+                    TravelingID = localStorage.getItem('TravelingID');
+                }
+
+                CheckVisaFormRequirments(langId, RegionId, CityId, DestinationID, NationalID, TravelingID);
+
+            });
+
+            var ValidatityVal = "";
+            $(document).on('click', '.p_three', function() {
+                if ($(this).hasClass("active")) {
+                    if ($(".p_four").hasClass("active")) { $(".p_four").removeClass("active") }
+                    ValidatityVal = $(this).attr("rel");
+                }
+            });
+
+            $(document).on('click', '.p_four', function() {
+
+                var langId = localStorage.getItem('langId');
+                var RegionId = localStorage.getItem('LivingIN');
+                var CityId = localStorage.getItem('CityID');
+                var DestinationID = localStorage.getItem('DestinationID');
+                var NationalID = localStorage.getItem('NationalID');
+                var TravelingID = localStorage.getItem('TravelingID');
+
+
+                if ($(this).hasClass("active")) {
+                    var ProcessingID = $(this).attr("rel");
+                    var DurationstayVal = $("#duration").attr("rel");
+                    if (ValidatityVal != null && ValidatityVal != "" && typeof (ValidatityVal) != "undefined" && ProcessingID != null && ProcessingID != "" && typeof (ProcessingID) != "undefined") {
+
+                        if ((RegionId != null && RegionId != "" && RegionId != "undefined") && (CityId != null && CityId != "" && CityId != "undefined") && (DestinationID != null && DestinationID != "" && DestinationID != "undefined") && (NationalID != null && NationalID != "" && NationalID != "undefined") && (TravelingID != null && TravelingID != "" && TravelingID != "undefined")) {
+
+                            var ReqVisaparamData = { plangId: langId, pRegionId: RegionId, pCityId: CityId, pDestinationid: DestinationID, pNationalityId: NationalID, pTravelpurposeId: TravelingID, pValidatityVal: ValidatityVal, pProcessingID: ProcessingID, pDurationstay: DurationstayVal }
+                            var urls = "/Umbraco/Surface/VisaAPI/GetFeesByValidityandProcessingID";
+
+                            jQuery.ajax({
+                                type: 'GET',
+                                url: urls,
+                                data: ReqVisaparamData,
+                                dataType: 'JSON',
+                                contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                                success: function(Result) {
+
+                                    if (Result != null) {
+
+                                        if (Result.embassyFees != null) { $("#embassyfee").html(Result.embassyFees); }
+                                        else { $("#embassyfee").html("NA"); }
+
+                                        if (Result.serviceFees != null) { $("#servicefee").html(Result.serviceFees); }
+                                        else { $("#servicefee").html("NA"); }
+
+                                        if (Result.vatFees != null) { $("#vatfee").html(Result.vatFees); }
+                                        else { $("#vatfee").html("NA"); }
+
+                                        if (Result.totalFees != null) { $("#totalfee").html(Result.totalFees); }
+                                        else { $("#totalfee").html("NA"); }
+
+                                    }
+
+
+                                },
+                                error: function() {
+                                    alert("Error occurs");
+                                }
+                            });
+
+
+                        }
+
+
+                    }
+
+                }
+            });
+
+
+
+            //FORM4 DATA
+            $("#frm4next").css("display", "none");
+            $(document).on('click', '#form4save', function() {
+                var addservicedata = [];
+                $('.accordionServicetoappend .card').each(function(i, obj) {
+                    var TextData = $(this).find('h2').text();
+                    var filterText = TextData.replace('Remove', '');
+
+                    addservicedata.push({
+                        'username': '@Context?.User?.Identity?.Name',
+                        'name': filterText
+                    });
+                });
+
+                var UserID = $("#userId").val();
+                var formData = new FormData();
+                formData.append("paddservicedata", JSON.stringify(addservicedata));
+                formData.append("UserID", UserID);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Umbraco/api/EmailSending/Addservice",
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(data) {
+                        if (data == "1") {
+
+                            $("#form4save").css("display", "none");
+                            $("#frm4next").css("display", "block");
+
+                        }
+                    }
+                });
+
+
+
+            });
+
+
+            //FORM5 DATA
+
+            $("#frm5next").css('display','none');
+            $(document).on('click', '#frm5save', function() {
+
+                 var UserID = $("#userId").val();//Payment
+                
+                    if ($('input[name="Payment"]:checked').length == 0) {
+                    alert('Please select payment method!');
+                    return false;
+                }
+
+                var PaymentVal = $('input[name="Payment"]:checked').val();
+               
+                var requestData = {pPaymentVal:PaymentVal,UserID:UserID}
+                 var urls = "/Umbraco/Surface/VisaApp/AddpaymentMethodData";
+
+                    jQuery.ajax({
+                        type: 'GET',
+                        url: urls,
+                        data: requestData,
+                        dataType: 'JSON',
+                        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                        success: function(Result) {
+
+                            if (Result != "1") {
+                                $("#frm5save").css('display','none');
+                                $("#frm5next").css('display','block');
+                            }
+
+
+                        },
+                        error: function() {
+                            alert("Error occurs");
+                        }
+                    });
+
+
+            });
+
+        });
+        function GetNationalityByLanguageIDForFormDATA(langId) {
+
+            var requestData = { plangId: langId }
+            var urls = "/Umbraco/Surface/VisaAPI/GetAllCountriesByLangID";
+
+            jQuery.ajax({
+                type: 'GET',
+                url: urls,
+                data: requestData,
+                dataType: 'JSON',
+                contentType: 'application/json',
+
+                success: function(repo) {
+
+                    if (repo.result.nationalities != null) {
+
+                        $("#CurrentNationality").append("<option>select</option>");
+                        $("#PreviousNationality").append("<option>select</option>");
+                        $("#frm3nationality").append("<option>select</option>");
+                        $.each(repo.result.origins, function(indexes, item) {
+
+                            var NationalityListItem = "<option value=\"" + repo.result.origins[indexes].nationalityId + "\">" + repo.result.origins[indexes].name + "</option>";
+                            $("#CurrentNationality").append(NationalityListItem);
+                            $("#PreviousNationality").append(NationalityListItem);
+                            $("#frm3nationality").append(NationalityListItem);
+                        });
+                    }
+
+                    if (repo.result.destinations != null) {
+                        $("#frm3TravelingTo").append("<option>select</option>");
+
+                        $.each(repo.result.destinations, function(indexes, item) {
+                            var newListItem = "<option value=\"" + repo.result.destinations[indexes].destinationId + "\">" + repo.result.destinations[indexes].name + "</option>";
+                            $("#frm3TravelingTo").append(newListItem);
+
+                        });
+                    }
+
+                    if (repo.result.travelPurposes != null) {
+                        $("#frm3PurposeOfTravel").append("<option>select</option>");
+
+                        $.each(repo.result.travelPurposes, function(indexes, item) {
+                            var newListItem = "<option value=\"" + repo.result.travelPurposes[indexes].travelPurposeId + "\">" + repo.result.travelPurposes[indexes].name + "</option>";
+                            $("#frm3PurposeOfTravel").append(newListItem);
+
+                        });
+                    }
+
+
+
+
+                },
+                error: function() {
+                    alert("Error occurs");
+                }
+            });
+
+
+        }
+
+
+        function CheckVisaFormRequirments(langId, RegionId, CityId, Destinationid, NationalityId, TravelpurposeId) {
+
+            var ReqVisaparamData = { plangId: langId, pRegionId: RegionId, pCityId: CityId, pDestinationid: Destinationid, pNationalityId: NationalityId, pTravelpurposeId: TravelpurposeId }
+            var urls = "/Umbraco/Surface/VisaAPI/GetVisaForm3Requirments";
+
+            jQuery.ajax({
+                type: 'GET',
+                url: urls,
+                data: ReqVisaparamData,
+                dataType: 'JSON',
+                contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                success: function(data) {
+                    $(".frm3bindhtml").html("");
+                    $(".displayTitletext").html("");
+                    if (data != null && data.stringObjectValues != null && data.stringObjectValues != "") {
+
+                        $(".frm3bindhtml").html(data.stringObjectValues);
+                    }
+                    if (data != null && data.titleheading != null && data.titleheading != "") {
+                        $(".displayTitletext").css('display', 'block');
+                        $(".displayTitletext").append(data.titleheading);
+                    }
+
+                },
+                error: function() {
+                    alert("Error occurs");
+                }
+            });
+
+        }
+
+        function Form1Validation() {
+
+            if ($("#frm1fname").val() === '') {
+                $("#frm1fname").addClass('error');
+                $("#frm1fname").focus();
+                return false;
+            }
+
+            if ($("#frm1mname").val() === '') {
+                $("#frm1mname").addClass('error');
+                $("#frm1mname").focus();
+                return false;
+            }
+
+            if ($("#frm1sname").val() === '') {
+                $("#frm1sname").addClass('error');
+                $("#frm1sname").focus();
+                return false;
+            }
+
+            if ($("#frm1othname").val() === '') {
+                $("#frm1othname").addClass('error');
+                $("#frm1othname").focus();
+                return false;
+            }
+
+            if ($("#frm1othname").val() === '') {
+                $("#frm1othname").addClass('error');
+                $("#frm1othname").focus();
+                return false;
+            }
+
+            if (!$('input[name="gender"]:checked')) {
+                return false;
+            }
+
+            if ($("#CurrentNationality option:selected").val() == null || typeof ($("#CurrentNationality option:selected").val()) == "undefined" || $("#CurrentNationality option:selected").text() == "select") {
+                $("#CurrentNationality").addClass('error');
+                $("#CurrentNationality").focus();
+                return false;
+            }
+
+            if ($("#frm1PlaceOfbirth").val() === '') {
+                $("#frm1PlaceOfbirth").addClass('error');
+                $("#frm1PlaceOfbirth").focus();
+                return false;
+            }
+
+            if ($("#frm1Maritalstatus option:selected").val() == null || typeof ($("#frm1Maritalstatus option:selected").val()) == "undefined" || $("#frm1Maritalstatus option:selected").text() == "select") {
+                $("#frm1Maritalstatus").addClass('error');
+                $("#frm1Maritalstatus").focus();
+                return false;
+            }
+
+
+            if ($("#PreviousNationality option:selected").val() == null || typeof ($("#PreviousNationality option:selected").val()) == "undefined" || $("#PreviousNationality option:selected").text() == "select") {
+                $("#PreviousNationality").addClass('error');
+                $("#PreviousNationality").focus();
+                return false;
+            }
+
+            if ($("#frm1NIN").val() === '') {
+                $("#frm1NIN").addClass('error');
+                $("#frm1NIN").focus();
+                return false;
+            }
+            if ($("#phone").val() === '') {
+                $("#phone").addClass('error');
+                $("#phone").focus();
+                return false;
+            }
+            if ($("#frm1highestdegree").val() === '') {
+                $("#frm1highestdegree").addClass('error');
+                $("#frm1highestdegree").focus();
+                return false;
+            }
+            if ($("#frm1passportnumber").val() === '') {
+                $("#frm1passportnumber").addClass('error');
+                $("#frm1passportnumber").focus();
+                return false;
+            }
+            if ($("#Passportdateday option:selected").val() == null || typeof ($("#Passportdateday option:selected").val()) == "undefined" || $("#Passportdateday option:selected").text() == "select") {
+                $("#Passportdateday").addClass('error');
+                $("#Passportdateday").focus();
+                return false;
+            }
+            if ($("#Passportdatemonth option:selected").val() == null || typeof ($("#Passportdatemonth option:selected").val()) == "undefined" || $("#Passportdatemonth option:selected").text() == "select") {
+                $("#Passportdatemonth").addClass('error');
+                $("#Passportdatemonth").focus();
+                return false;
+            }
+            if ($("#Passportdateyear option:selected").val() == null || typeof ($("#Passportdateyear option:selected").val()) == "undefined" || $("#Passportdateyear option:selected").text() == "select") {
+                $("#Passportdateyear").addClass('error');
+                $("#Passportdateyear").focus();
+                return false;
+            }
+            if ($("#Passportdateyear option:selected").val() == null || typeof ($("#Passportdateyear option:selected").val()) == "undefined" || $("#Passportdateyear option:selected").text() == "select") {
+                $("#Passportdateyear").addClass('error');
+                $("#Passportdateyear").focus();
+                return false;
+            }
+            if ($("#Passportdateyear option:selected").val() == null || typeof ($("#Passportdateyear option:selected").val()) == "undefined" || $("#Passportdateyear option:selected").text() == "select") {
+                $("#Passportdateyear").addClass('error');
+                $("#Passportdateyear").focus();
+                return false;
+            }
+            if ($("#Passportexpiredateday option:selected").val() == null || typeof ($("#Passportexpiredateday option:selected").val()) == "undefined" || $("#Passportexpiredateday option:selected").text() == "select") {
+                $("#Passportexpiredateday").addClass('error');
+                $("#Passportexpiredateday").focus();
+                return false;
+            }
+            if ($("#Passportexpiredatemonth option:selected").val() == null || typeof ($("#Passportexpiredatemonth option:selected").val()) == "undefined" || $("#Passportexpiredatemonth option:selected").text() == "select") {
+                $("#Passportexpiredatemonth").addClass('error');
+                $("#Passportexpiredatemonth").focus();
+                return false;
+            }
+            if ($("#Passportexpiredateyear option:selected").val() == null || typeof ($("#Passportexpiredateyear option:selected").val()) == "undefined" || $("#Passportexpiredateyear option:selected").text() == "select") {
+                $("#Passportexpiredateyear").addClass('error');
+                $("#Passportexpiredateyear").focus();
+                return false;
+            }
+
+            if (!$('input[name="applicaintminor"]:checked')) {
+                return false;
+            }
+
+            if (!$('input[name="Invitedbyfamily"]:checked')) {
+                return false;
+            }
+
+            if (!$('input[name="Invitedbycompany"]:checked')) {
+                return false;
+            }
+
+            if ($("#frm1HouseNumber").val() === '') {
+                $("#frm1HouseNumber").addClass('error');
+                $("#frm1HouseNumber").focus();
+                return false;
+            }
+            if ($("#frm1AreaName").val() === '') {
+                $("#frm1AreaName").addClass('error');
+                $("#frm1AreaName").focus();
+                return false;
+            }
+            if ($("#frm1ZipCode").val() === '') {
+                $("#frm1ZipCode").addClass('error');
+                $("#frm1ZipCode").focus();
+                return false;
+            }
+            if ($("#frm1StreetNo").val() === '') {
+                $("#frm1StreetNo").addClass('error');
+                $("#frm1StreetNo").focus();
+                return false;
+            }
+            if ($("#frm1City").val() === '') {
+                $("#frm1City").addClass('error');
+                $("#frm1City").focus();
+                return false;
+            }
+            if ($("#frm1buildingName").val() === '') {
+                $("#frm1buildingName").addClass('error');
+                $("#frm1buildingName").focus();
+                return false;
+            }
+
+            return true;
+
+        }
+
+        function validateEmail(stremail) {
+            //var filter = /^[\w\-\.\+]+\@@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
+            var filter = /^[a-zA-Z0-9._-].+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,10}$/;
+            if (filter.test(stremail)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+    </script>
+
+}
+else
+{
+
+    HttpContextAccessor.HttpContext.Response.Redirect("/");
+
+
+}

@@ -1,0 +1,126 @@
+﻿@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels
+
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.Blog>
+
+@{
+    Layout = "master.cshtml";
+
+    var MainPage = UmbracoContext.Content.GetAtRoot().DescendantsOrSelf<Blog>().FirstOrDefault();
+    //var allBlogList = MainPage?.Children<MainCategory>().Where(x => x.IsVisible()) ?? Enumerable.Empty<MainCategory>();
+    @*var allBlogs = Model?.Children<SubArticle>().Where(x => x.IsVisible()) ?? Enumerable.Empty<SubArticle>();*@
+
+    IList<IPublishedContent> allBlogList = MainPage.Children.Where(x => x.ContentType.Alias == "mainCategory").ToList();
+    string BannerImage = "";
+
+    var BannerImageMediaPickerSingle = Model.Value<IPublishedContent>("imageBlog");
+    if (BannerImageMediaPickerSingle != null)
+    {
+        BannerImage = BannerImageMediaPickerSingle.Url();
+    }
+}
+
+<link rel="stylesheet" href="~/css/blogs.min.css">
+<section id="hero-area" class="parallax-searchs header-blogs" data-stellar-background-ratio="0.5" style="background: url(@BannerImage) !important;">
+    <div class="hero-main">
+        <div class="container aos-init aos-animate" data-aos="zoom-in">
+            <div class="row box-header">
+                <div class="col-12">
+                    <div class="hero-inner">
+                        <!-- Welcome Text -->
+                        <div class="welcome-text">
+                            @Model.Value("describtion")
+                        </div>
+                        <!--/ End Welcome Text -->
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="blogs-filter">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-8 col-sm-8 col-8">
+                <div class="search">
+                    <input type="text" class="form-control" placeholder="search for blogs">
+                    <i class="fab fa-sistrix"></i>
+                </div>
+            </div>
+            <div class="col-lg-2 col-4"><button class="btn-search"><span>Search</span></button></div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="slider-buttons">
+            <div class="partners rec-pro text-center">
+                @foreach (var item in allBlogList)
+                {
+                    <a href="@item.Url()" class="btn">@item.Name</a>
+
+                }
+            </div>
+        </div>
+    </div>
+</section>
+@foreach (var item in allBlogList)
+{
+    int postCounter = 0;
+
+    IList<IPublishedContent> AllBlogArticlesPostings = item.Descendants().OrderByDescending(y => y.CreateDate).Where(x => x.ContentType.Alias == "subArticle" && x.IsVisible()).ToList();
+
+    <section class="how-it-works rec-pro bg-white-2">
+        <div class="container">
+            @if (AllBlogArticlesPostings != null && AllBlogArticlesPostings.Count > 0)
+            {
+                <div class="sec-title">
+                    <a href="@item.Url()"><h2>@item.Name</h2></a>
+                </div>
+            }
+            <div class="row service-1">
+                @foreach (var post in AllBlogArticlesPostings.Take(12))
+                {
+                    postCounter = postCounter + 1;
+                    //BlogsHeaderTitle blogNameTitle
+                    string ThumbnailImage = "";
+
+                    var articleImageMediaPickerSingle = post.Value<IPublishedContent>("imageSize1");
+                    if (articleImageMediaPickerSingle != null)
+                    {
+                        ThumbnailImage = articleImageMediaPickerSingle.Url();
+                    }
+
+                    if (postCounter > 4)
+                    {
+                        @Html.Raw("</div>")
+                        @Html.Raw("<br/>")
+                        @Html.Raw("<div class=\"row service-1\">")
+                        postCounter = 0;
+                    }
+
+                    <article class="col-lg-3 col-md-6 col-xs-12 serv">
+                        <a href="@post.Url()" class="blogpost">
+                            <div class="serv-flex">
+                                <div class="art-1 img-13">
+
+                                    <img src="@ThumbnailImage" alt="@post.Name" class="img-responsive" />
+                                    <h3>@post.Name</h3>
+
+                                </div>
+                            </div>
+
+                        </a>
+                    </article>
+
+
+                }
+
+
+            </div>
+
+        </div>
+    </section>
+
+}
+

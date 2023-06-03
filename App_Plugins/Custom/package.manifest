@@ -1,0 +1,14 @@
+﻿{
+  "dashboards": [
+    {
+      "alias": "WelcomeDashboard",
+      "view": "/App_Plugins/Custom/download.html",
+      "sections": [ "content" ],
+      "weight": 12,
+      "access": [
+        { "deny": "translator" },
+        { "grant": "admin,editor,customEditor" }
+      ]
+    }
+  ]
+}
